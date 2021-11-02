@@ -13,6 +13,8 @@
 		4A4F062727235D8B00497A25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A4F062627235D8B00497A25 /* Assets.xcassets */; };
 		4A4F062A27235D8B00497A25 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A4F062927235D8B00497A25 /* Preview Assets.xcassets */; };
 		4A4F062D27235D8B00497A25 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A4F062B27235D8B00497A25 /* LaunchScreen.storyboard */; };
+		4ABC62A02730E074001AA1CD /* CircleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ABC629F2730E074001AA1CD /* CircleButton.swift */; };
+		4ABC62A22730E57C001AA1CD /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ABC62A12730E57B001AA1CD /* MapView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		4A4F062927235D8B00497A25 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4A4F062C27235D8B00497A25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4A4F062E27235D8B00497A25 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4ABC629F2730E074001AA1CD /* CircleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
+		4ABC62A12730E57B001AA1CD /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +67,8 @@
 				4A4F062B27235D8B00497A25 /* LaunchScreen.storyboard */,
 				4A4F062E27235D8B00497A25 /* Info.plist */,
 				4A4F062827235D8B00497A25 /* Preview Content */,
+				4ABC629F2730E074001AA1CD /* CircleButton.swift */,
+				4ABC62A12730E57B001AA1CD /* MapView.swift */,
 			);
 			path = Geo;
 			sourceTree = "<group>";
@@ -102,7 +108,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1170;
-				LastUpgradeCheck = 1170;
+				LastUpgradeCheck = 1300;
 				ORGANIZATIONNAME = "William Svoboda";
 				TargetAttributes = {
 					4A4F061C27235D8400497A25 = {
@@ -148,7 +154,9 @@
 			files = (
 				4A4F062127235D8400497A25 /* AppDelegate.swift in Sources */,
 				4A4F062327235D8400497A25 /* SceneDelegate.swift in Sources */,
+				4ABC62A22730E57C001AA1CD /* MapView.swift in Sources */,
 				4A4F062527235D8400497A25 /* ContentView.swift in Sources */,
+				4ABC62A02730E074001AA1CD /* CircleButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -192,6 +200,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -252,6 +261,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -289,6 +299,7 @@
 				DEVELOPMENT_TEAM = CW4C3JKWPR;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Geo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -296,7 +307,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.williamsvoboda.Geo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -309,6 +320,7 @@
 				DEVELOPMENT_TEAM = CW4C3JKWPR;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Geo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -316,7 +328,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.williamsvoboda.Geo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

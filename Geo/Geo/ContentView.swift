@@ -10,18 +10,13 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var count: Int = 0
-    
-    func incrementCount() {
-        count += 1
-    }
-    
     var body: some View {
-        Button(action: incrementCount){
-            Text("The count is \(count)").padding().background(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(Color.blue, lineWidth: 2)
-            )
+        NavigationView {
+            NavigationLink(destination: MapView(), label: {
+                Text("Enter")
+            })
+                .buttonStyle(CircleButton(color: .red))
+                .navigationTitle("Welcome")
         }
     }
 }
