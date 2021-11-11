@@ -11,25 +11,18 @@ import MapKit
 
 struct MapView: View {
     
-    @State private var region = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(
-            latitude: 40.35,
-            longitude: -74.66
-        ),
-        span: MKCoordinateSpan(
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005
-        )
-    )
+    @StateObject private var viewModel = MapViewModel()
     
     var body: some View {
         Map(
-            coordinateRegion: $region,
-            interactionModes: MapInteractionModes.all
-            // showsUserLocation: true,
-            // userTrackingMode: .constant(.follow)
+            coordinateRegion: $viewModel.region,
+            interactionModes: MapInteractionModes.all,
+            showsUserLocation: true
         )
-            .edgesIgnoringSafeArea(.all)
+            .ignoresSafeArea()
+            .onAppear {
+                viewModel.checkLocationServicesEnabled()
+            }
     }
 }
 
