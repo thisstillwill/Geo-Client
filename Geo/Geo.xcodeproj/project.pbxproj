@@ -43,6 +43,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4A40AAB92742B5AA007BA2F4 /* MapView */ = {
+			isa = PBXGroup;
+			children = (
+				4ABC62A12730E57B001AA1CD /* MapView.swift */,
+				4AC6292D273CDE5500E003FE /* MapViewModel.swift */,
+			);
+			path = MapView;
+			sourceTree = "<group>";
+		};
+		4A40AABA2742B7C0007BA2F4 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4ABC629F2730E074001AA1CD /* CircleButton.swift */,
+				4A40AAB92742B5AA007BA2F4 /* MapView */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		4A4F061427235D8400497A25 = {
 			isa = PBXGroup;
 			children = (
@@ -62,16 +80,14 @@
 		4A4F061F27235D8400497A25 /* Geo */ = {
 			isa = PBXGroup;
 			children = (
+				4A4F062427235D8400497A25 /* ContentView.swift */,
+				4A40AABA2742B7C0007BA2F4 /* Views */,
 				4A4F062027235D8400497A25 /* AppDelegate.swift */,
 				4A4F062227235D8400497A25 /* SceneDelegate.swift */,
-				4A4F062427235D8400497A25 /* ContentView.swift */,
 				4A4F062627235D8B00497A25 /* Assets.xcassets */,
 				4A4F062B27235D8B00497A25 /* LaunchScreen.storyboard */,
 				4A4F062E27235D8B00497A25 /* Info.plist */,
 				4A4F062827235D8B00497A25 /* Preview Content */,
-				4ABC629F2730E074001AA1CD /* CircleButton.swift */,
-				4ABC62A12730E57B001AA1CD /* MapView.swift */,
-				4AC6292D273CDE5500E003FE /* MapViewModel.swift */,
 			);
 			path = Geo;
 			sourceTree = "<group>";
