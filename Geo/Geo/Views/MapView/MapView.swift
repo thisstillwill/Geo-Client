@@ -17,7 +17,8 @@ struct MapView: View {
         Map(
             coordinateRegion: $viewModel.region,
             interactionModes: MapInteractionModes.all,
-            showsUserLocation: true
+            showsUserLocation: true,
+            userTrackingMode: $viewModel.trackingMode
         )
             .ignoresSafeArea()
             .onAppear {

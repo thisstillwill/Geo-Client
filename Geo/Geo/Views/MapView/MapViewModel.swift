@@ -6,6 +6,7 @@
 //  Copyright © 2021 William Svoboda. All rights reserved.
 //
 
+import SwiftUI
 import MapKit
 
 // By default map is centered roughly on West Point, New York
@@ -17,10 +18,16 @@ enum MapDetails {
 
 final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
+    /* TODO:
+     By using MapUserTrackingMode, the zoom level will be auto-adjusted.
+     If I want to keep a closer zoom by default, I will need to handle user tracking myself
+     based on location changes.
+     */
     @Published var region = MKCoordinateRegion(
         center: MapDetails.defaultLocation,
         span: MapDetails.defaultSpan
     )
+    @Published var trackingMode: MapUserTrackingMode = .none
     
     var locationManager: CLLocationManager?
     
@@ -48,6 +55,7 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
             print("You have denied this app location permission.")
         case .authorizedAlways, .authorizedWhenInUse:
             region = MKCoordinateRegion(center: locationManager.location?.coordinate ?? MapDetails.defaultLocation, span: MapDetails.defaultSpan)
+            trackingMode = .follow
         @unknown default:
             break
         }
