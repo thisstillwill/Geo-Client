@@ -8,9 +8,10 @@
 
 import MapKit
 
-// By default map is centered roughly on Princeton, New Jersey
+// By default map is centered roughly on West Point, New York
 enum MapDetails {
-    static let defaultLocation = CLLocationCoordinate2D(latitude: 40.35, longitude: -74.66)
+    static let defaultLocation = CLLocationCoordinate2D(latitude: 41.23, longitude: -73.58)
+    // static let defaultLocation = CLLocationCoordinate2D(latitude: 40.35, longitude: -74.66)
     static let defaultSpan = MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
 }
 
@@ -46,7 +47,7 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
         case .denied:
             print("You have denied this app location permission.")
         case .authorizedAlways, .authorizedWhenInUse:
-            region = MKCoordinateRegion(center: locationManager.location!.coordinate, span: MapDetails.defaultSpan)
+            region = MKCoordinateRegion(center: locationManager.location?.coordinate ?? MapDetails.defaultLocation, span: MapDetails.defaultSpan)
         @unknown default:
             break
         }
