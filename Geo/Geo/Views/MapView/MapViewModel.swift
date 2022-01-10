@@ -28,6 +28,7 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
         span: MapDetails.defaultSpan
     )
     @Published var trackingMode: MapUserTrackingMode = .none
+    @Published var points = [Point]()
     
     var locationManager: CLLocationManager?
     
@@ -37,6 +38,7 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
             locationManager!.delegate = self
             locationManager?.activityType = CLActivityType.other
             locationManager?.desiredAccuracy = kCLLocationAccuracyBest
+            //annotations = getAnnotations()
         } else {
             print("Location services is required to use this app.")
         }
@@ -44,7 +46,7 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
     
     func checkLocationAuthorized() {
         guard let locationManager = locationManager else { return }
-
+        
         switch locationManager.authorizationStatus {
             
         case .notDetermined:
@@ -63,5 +65,17 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         checkLocationAuthorized()
+    }
+    
+    /* TODO:
+     Replace function with actual network call
+     */
+    func getAnnotations() {
+        points = TestPoints.points
+//        return TestPoints.points.map {
+//            (point: Point) -> MapMarker in
+//            let annotation = MapMarker(coordinate: point.location, tint: Color.red)
+//            return annotation
+//        }
     }
 }

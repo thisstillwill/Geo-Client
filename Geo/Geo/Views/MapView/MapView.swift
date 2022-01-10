@@ -18,11 +18,15 @@ struct MapView: View {
             coordinateRegion: $viewModel.region,
             interactionModes: MapInteractionModes.all,
             showsUserLocation: true,
-            userTrackingMode: $viewModel.trackingMode
-        )
+            userTrackingMode: $viewModel.trackingMode,
+            annotationItems: TestPoints.points
+        ) {
+            point in MapMarker(coordinate: point.location, tint: Color.red)
+        }
             .ignoresSafeArea()
             .onAppear {
                 viewModel.checkLocationServicesEnabled()
+                viewModel.getAnnotations()
             }
     }
 }
