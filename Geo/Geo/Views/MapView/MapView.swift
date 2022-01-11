@@ -19,14 +19,14 @@ struct MapView: View {
             interactionModes: MapInteractionModes.all,
             showsUserLocation: true,
             userTrackingMode: $viewModel.trackingMode,
-            annotationItems: TestPoints.points
+            annotationItems: viewModel.annotations
         ) {
             point in MapMarker(coordinate: point.location, tint: Color.red)
         }
             .ignoresSafeArea()
             .onAppear {
                 viewModel.checkLocationServicesEnabled()
-                viewModel.getAnnotations()
+                viewModel.getMapAnnotations()
             }
     }
 }

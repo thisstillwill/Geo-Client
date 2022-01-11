@@ -12,7 +12,6 @@ import MapKit
 // By default map is centered roughly on West Point, New York
 enum MapDetails {
     static let defaultLocation = CLLocationCoordinate2D(latitude: 41.23, longitude: -73.58)
-    // static let defaultLocation = CLLocationCoordinate2D(latitude: 40.35, longitude: -74.66)
     static let defaultSpan = MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
 }
 
@@ -28,7 +27,7 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
         span: MapDetails.defaultSpan
     )
     @Published var trackingMode: MapUserTrackingMode = .none
-    @Published var points = [Point]()
+    @Published var annotations: [Point] = []
     
     var locationManager: CLLocationManager?
     
@@ -70,12 +69,13 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
     /* TODO:
      Replace function with actual network call
      */
-    func getAnnotations() {
-        points = TestPoints.points
-//        return TestPoints.points.map {
-//            (point: Point) -> MapMarker in
-//            let annotation = MapMarker(coordinate: point.location, tint: Color.red)
-//            return annotation
-//        }
+    func getMapAnnotations() {
+        annotations.append(contentsOf: TestPoints.points)
+        annotations.append(TestPoints.lot19)
+        //        return TestPoints.points.map {
+        //            (point: Point) -> MapMarker in
+        //            let annotation = MapMarker(coordinate: point.location, tint: Color.red)
+        //            return annotation
+        //        }
     }
 }

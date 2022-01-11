@@ -40,4 +40,5 @@ struct TestPoints {
     static let points: [Point] = [firestone, dod]
     static let firestone = Point(id: UUID().uuidString, title: "Firestone Library", location: CLLocationCoordinate2D(latitude: 40.34961421019707, longitude: -74.65748434583759))
     static let dod = Point(id: UUID().uuidString, title: "Dod Hall", location: CLLocationCoordinate2D(latitude: 40.346927716711406, longitude: -74.65865037281984))
+    static let lot19 = Point(id: UUID().uuidString, title: "Lot 19", location: CLLocationCoordinate2D(latitude: 40.338747766989734, longitude: -74.66547887223855))
 }
