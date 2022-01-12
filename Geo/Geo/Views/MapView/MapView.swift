@@ -21,7 +21,9 @@ struct MapView: View {
             userTrackingMode: $viewModel.trackingMode,
             annotationItems: viewModel.annotations
         ) {
-            point in MapMarker(coordinate: point.location, tint: Color.red)
+            point in MapAnnotation(coordinate: point.location) {
+                PointAnnotationView(title: point.title)
+            }
         }
             .ignoresSafeArea()
             .onAppear {
