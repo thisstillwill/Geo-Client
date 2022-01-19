@@ -14,22 +14,31 @@ struct MapView: View {
     @StateObject private var viewModel = MapViewModel()
     
     var body: some View {
-        Map(
-            coordinateRegion: $viewModel.region,
-            interactionModes: MapInteractionModes.all,
-            showsUserLocation: true,
-            userTrackingMode: $viewModel.trackingMode,
-            annotationItems: viewModel.annotations
-        ) {
-            point in MapAnnotation(coordinate: point.location) {
-                PointAnnotationView(title: point.title)
+        ZStack(alignment: .bottomTrailing) {
+            Map(
+                coordinateRegion: $viewModel.region,
+                interactionModes: MapInteractionModes.all,
+                showsUserLocation: true,
+                userTrackingMode: $viewModel.trackingMode,
+                annotationItems: viewModel.annotations
+            ) {
+                point in MapAnnotation(coordinate: point.location) {
+                    PointAnnotationView(title: point.title)
+                }
             }
-        }
             .ignoresSafeArea()
             .onAppear {
                 viewModel.checkLocationServicesEnabled()
                 viewModel.getMapAnnotations()
             }
+            Button {
+                print("Button pressed!")
+            } label: {
+                Image(systemName: "plus")
+            }
+            .buttonStyle(CircleButton(color: .red, radius: 100))
+            .offset(x: -50, y: -100)
+        }
     }
 }
 

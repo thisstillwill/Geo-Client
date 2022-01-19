@@ -1,17 +1,16 @@
 //
-//  CircleButton.swift
+//  AddPointView.swift
 //  Geo
 //
-//  Created by William Svoboda on 11/1/21.
-//  Copyright © 2021 William Svoboda. All rights reserved.
+//  Created by William Svoboda on 1/18/22.
+//  Copyright © 2022 William Svoboda. All rights reserved.
 //
 
 import SwiftUI
 
-struct CircleButton: ButtonStyle {
+struct AddPointView: ButtonStyle {
     
     var color: Color
-    var radius: CGFloat
     
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -20,8 +19,8 @@ struct CircleButton: ButtonStyle {
             .background(
                 ZStack{
                     Circle()
-                        .frame(width: radius, height: radius)
-                        .foregroundColor(color)
+                        .frame(width: 100, height: 100)
+                        .foregroundColor(.red)
                 })
     }
 }
