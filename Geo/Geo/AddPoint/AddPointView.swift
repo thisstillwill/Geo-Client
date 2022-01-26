@@ -10,7 +10,7 @@ import SwiftUI
 
 struct AddPointView: View {
     
-    @State var title: String = ""
+    @StateObject private var viewModel = AddPointViewModel()
     
     var body: some View {
         NavigationView {
@@ -18,14 +18,12 @@ struct AddPointView: View {
                 
                 // Point information
                 Section(header: Text("Information")) {
-                    TextField("Title", text: $title)
+                    TextField("Title", text: $viewModel.state.title)
                 }
                 
                 // Submit button
                 Section {
-                    Button(action: {
-                        // Do something!
-                    }) {
+                    Button(action: viewModel.submitForm) {
                         HStack {
                             Spacer()
                             Text("Submit")
@@ -36,6 +34,12 @@ struct AddPointView: View {
                     .padding(10)
                     .background(Color.accentColor)
                     .cornerRadius(8)
+                    .alert(isPresented: $viewModel.state.showAlert) {
+                        Alert(
+                            title: Text("Can't Add Point!"),
+                            message: Text("There are still missing form values.")
+                        )
+                    }
                 }
             })
                 .navigationTitle("Add Point")
