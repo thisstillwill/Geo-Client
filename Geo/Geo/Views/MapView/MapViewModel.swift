@@ -66,6 +66,10 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
         checkLocationAuthorized()
     }
     
+    func getCurrentLocation() -> CLLocationCoordinate2D {
+        return locationManager!.location!.coordinate
+    }
+    
     /* TODO:
      Replace function with actual network call
      */

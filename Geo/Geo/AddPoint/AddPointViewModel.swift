@@ -7,8 +7,9 @@
 //
 
 import Foundation
+import CoreLocation
 
-struct AddPointState: Equatable {
+struct AddPointState {
     var title: String = ""
     var showAlert = false
 }
@@ -21,10 +22,6 @@ final class AddPointViewModel: ObservableObject {
         self.state = AddPointState()
     }
     
-    func updateTitle(_ title: String) {
-        state.title = title
-    }
-    
     func isValid() -> Bool {
         return !state.title.isEmpty
     }
@@ -32,6 +29,7 @@ final class AddPointViewModel: ObservableObject {
     func submitForm() {
         if isValid() {
             // Submit to point to server
+            state.showAlert = false
             print(state)
         }
         else {
