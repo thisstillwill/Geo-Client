@@ -15,6 +15,8 @@ struct MapView: View {
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
+            
+            // Main map screen
             Map(
                 coordinateRegion: $viewModel.region,
                 interactionModes: MapInteractionModes.all,
@@ -31,13 +33,13 @@ struct MapView: View {
                 viewModel.checkLocationServicesEnabled()
                 viewModel.getMapAnnotations()
             }
-            Button {
-                print("Button pressed!")
-            } label: {
+            
+            // Add point button
+            NavigationLink(destination: AddPointView(), label: {
                 Image(systemName: "plus")
-            }
-            .buttonStyle(CircleButton(color: .red, radius: 100))
-            .offset(x: -50, y: -100)
+            })
+                .buttonStyle(CircleButton(color: .red, radius: 100))
+                .offset(x: -50, y: -100)
         }
     }
 }

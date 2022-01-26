@@ -2,25 +2,49 @@
 //  AddPointView.swift
 //  Geo
 //
-//  Created by William Svoboda on 1/18/22.
+//  Created by William Svoboda on 1/25/22.
 //  Copyright © 2022 William Svoboda. All rights reserved.
 //
 
 import SwiftUI
 
-struct AddPointView: ButtonStyle {
+struct AddPointView: View {
     
-    var color: Color
+    @State var title: String = ""
     
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .foregroundColor(.white)
-            .font(.system(size: 50, weight: .semibold))
-            .background(
-                ZStack{
-                    Circle()
-                        .frame(width: 100, height: 100)
-                        .foregroundColor(.red)
-                })
+    var body: some View {
+        NavigationView {
+            Form(content: {
+                
+                // Point information
+                Section(header: Text("Information")) {
+                    TextField("Title", text: $title)
+                }
+                
+                // Submit button
+                Section {
+                    Button(action: {
+                        // Do something!
+                    }) {
+                        HStack {
+                            Spacer()
+                            Text("Submit")
+                            Spacer()
+                        }
+                    }
+                    .foregroundColor(.white)
+                    .padding(10)
+                    .background(Color.accentColor)
+                    .cornerRadius(8)
+                }
+            })
+                .navigationTitle("Add Point")
+        }
+    }
+}
+
+struct AddPointView_Previews: PreviewProvider {
+    static var previews: some View {
+        AddPointView()
     }
 }

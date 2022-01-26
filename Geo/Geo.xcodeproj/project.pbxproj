@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4A11D19B27750048009DCC65 /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11D19A27750048009DCC65 /* Point.swift */; };
+		4A35255B27A0E1180093C847 /* AddPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A35255A27A0E1180093C847 /* AddPointView.swift */; };
 		4A40AABE2742C6C9007BA2F4 /* Geo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A40AABD2742C6C9007BA2F4 /* Geo.swift */; };
 		4A4F062527235D8400497A25 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4F062427235D8400497A25 /* ContentView.swift */; };
 		4A4F062727235D8B00497A25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A4F062627235D8B00497A25 /* Assets.xcassets */; };
@@ -21,6 +22,7 @@
 
 /* Begin PBXFileReference section */
 		4A11D19A27750048009DCC65 /* Point.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
+		4A35255A27A0E1180093C847 /* AddPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPointView.swift; sourceTree = "<group>"; };
 		4A40AABD2742C6C9007BA2F4 /* Geo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geo.swift; sourceTree = "<group>"; };
 		4A4F061D27235D8400497A25 /* Geo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A4F062427235D8400497A25 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 				4ABC629F2730E074001AA1CD /* CircleButton.swift */,
 				4A40AAB92742B5AA007BA2F4 /* MapView */,
 				4A61DA2C278F309B00D3D4EE /* PointAnnotationView.swift */,
+				4A35255A27A0E1180093C847 /* AddPointView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -185,6 +188,7 @@
 				4ABC62A22730E57C001AA1CD /* MapView.swift in Sources */,
 				4A4F062527235D8400497A25 /* ContentView.swift in Sources */,
 				4A61DA2D278F309B00D3D4EE /* PointAnnotationView.swift in Sources */,
+				4A35255B27A0E1180093C847 /* AddPointView.swift in Sources */,
 				4A11D19B27750048009DCC65 /* Point.swift in Sources */,
 				4ABC62A02730E074001AA1CD /* CircleButton.swift in Sources */,
 				4AC6292E273CDE5500E003FE /* MapViewModel.swift in Sources */,
