@@ -78,6 +78,7 @@
 		4A40AABA2742B7C0007BA2F4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4A35255F27A0E9140093C847 /* AddPoint */,
 				4A4F062427235D8400497A25 /* ContentView.swift */,
 				4ABC629F2730E074001AA1CD /* CircleButton.swift */,
 				4A40AAB92742B5AA007BA2F4 /* MapView */,
@@ -105,7 +106,6 @@
 		4A4F061F27235D8400497A25 /* Geo */ = {
 			isa = PBXGroup;
 			children = (
-				4A35255F27A0E9140093C847 /* AddPoint */,
 				4A11D1992774FFF2009DCC65 /* Models */,
 				4A40AABA2742B7C0007BA2F4 /* Views */,
 				4A4F062627235D8B00497A25 /* Assets.xcassets */,

@@ -31,7 +31,12 @@ final class AddPointViewModel: ObservableObject {
         if isValid() {
             // Submit to point to server
             state.showAlert = false
-            print(state)
+            let newPoint = Point(id: nil, title: state.title, location: state.location!)
+            guard let encodedPoint = try? JSONEncoder().encode(newPoint) else {
+                print("Failed to encode new point")
+                return
+            }
+            print(String(data: encodedPoint, encoding: .utf8)!)
         }
         else {
             state.showAlert = true
