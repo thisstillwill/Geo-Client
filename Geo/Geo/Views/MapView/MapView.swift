@@ -11,7 +11,7 @@ import MapKit
 
 struct MapView: View {
     
-    @StateObject private var viewModel = MapViewModel()
+    @StateObject var viewModel = MapViewModel()
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -35,7 +35,7 @@ struct MapView: View {
             }
             
             // Add point button
-            NavigationLink(destination: AddPointView(), label: {
+            NavigationLink(destination: AddPointView().environmentObject(viewModel), label: {
                 Image(systemName: "plus")
             })
                 .buttonStyle(CircleButton(color: .red, radius: 100))

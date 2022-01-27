@@ -12,12 +12,13 @@ import CoreLocation
 struct AddPointView: View {
     
     @StateObject private var viewModel = AddPointViewModel()
+    @EnvironmentObject var locationManager: MapViewModel
     
     var body: some View {
         NavigationView {
             Form(content: {
                 
-                // Point information
+                // Point information fields
                 Section(header: Text("Information")) {
                     TextField("Title", text: $viewModel.state.title)
                 }
@@ -44,6 +45,9 @@ struct AddPointView: View {
                 }
             })
                 .navigationTitle("Add Point")
+        }
+        .onAppear {
+            viewModel.state.location = locationManager.getCurrentLocation()
         }
     }
 }

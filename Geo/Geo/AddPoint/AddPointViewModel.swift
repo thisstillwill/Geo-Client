@@ -11,6 +11,7 @@ import CoreLocation
 
 struct AddPointState {
     var title: String = ""
+    var location: CLLocationCoordinate2D?
     var showAlert = false
 }
 
