@@ -76,10 +76,7 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
     func getMapAnnotations() {
         annotations.append(contentsOf: TestPoints.points)
         annotations.append(TestPoints.lot19)
-        //        return TestPoints.points.map {
-        //            (point: Point) -> MapMarker in
-        //            let annotation = MapMarker(coordinate: point.location, tint: Color.red)
-        //            return annotation
-        //        }
+        annotations.append(TestPoints.nowhere)
+        print(annotations)
     }
 }

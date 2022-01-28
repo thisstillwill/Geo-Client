@@ -9,28 +9,48 @@
 import Foundation
 import CoreLocation
 
-// Facilitate serialization
-// Adapted from https://github.com/mapbox/turf-swift/blob/1a105b11bc3acd56df71778c8769c81c033f1dcb/Sources/Turf/CoreLocation.swift#L53-L66
-extension CLLocationCoordinate2D: Codable {
-     public func encode(to encoder: Encoder) throws {
-         var container = encoder.unkeyedContainer()
-         try container.encode(latitude)
-         try container.encode(longitude)
-     }
-      
-     public init(from decoder: Decoder) throws {
-         var container = try decoder.unkeyedContainer()
-         let latitude = try container.decode(CLLocationDegrees.self)
-         let longitude = try container.decode(CLLocationDegrees.self)
-         self.init(latitude: latitude, longitude: longitude)
-     }
- }
-
 // A Point represents a single unique point of interest on the map
 struct Point: Identifiable, Codable {
     let id: String? // TODO: Server generates a UUID?
     var title: String,
     location: CLLocationCoordinate2D
+    
+    // Overloaded init for testing and server upload
+    init(id: String?, title: String, location: CLLocationCoordinate2D) {
+        self.id = id
+        self.title = title
+        self.location = location
+    }
+    
+    // Facilitate serialization
+    // Adapted from https://medium.com/@nictheawesome/using-codable-with-nested-json-is-both-easy-and-fun-19375246c9ff
+    enum CodingKeys: String, CodingKey {
+        case point = "point"
+        case id = "id"
+        case title = "title"
+        case location = "location"
+        case latitude = "latitude"
+        case longitude = "longitude"
+    }
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let response = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .point)
+        id = try response.decode(String.self, forKey: .id)
+        title = try response.decode(String.self, forKey: .id)
+        let coordinate = try response.nestedContainer(keyedBy: CodingKeys.self, forKey: .location)
+        let latitude = try coordinate.decode(Double.self, forKey: .latitude)
+        let longitude = try coordinate.decode(Double.self, forKey: .longitude)
+        location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        var response = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .point)
+        try response.encode(id, forKey: .id)
+        try response.encode(title, forKey: .title)
+        var coordinate = response.nestedContainer(keyedBy: CodingKeys.self, forKey: .location)
+        try coordinate.encode(location.latitude, forKey: .latitude)
+        try coordinate.encode(location.longitude, forKey: .longitude)
+    }
 }
 
 //
@@ -41,4 +61,19 @@ struct TestPoints {
     static let firestone = Point(id: UUID().uuidString, title: "Firestone Library", location: CLLocationCoordinate2D(latitude: 40.34961421019707, longitude: -74.65748434583759))
     static let dod = Point(id: UUID().uuidString, title: "Dod Hall", location: CLLocationCoordinate2D(latitude: 40.346927716711406, longitude: -74.65865037281984))
     static let lot19 = Point(id: UUID().uuidString, title: "Lot 19", location: CLLocationCoordinate2D(latitude: 40.338747766989734, longitude: -74.66547887223855))
+    
+    // Test JSON decoding
+    static let jsonString = """
+    {"point": {
+        "id": "12345678",
+        "title": "Null Island",
+        "location": {
+            "latitude": 0.0,
+            "longitude": 0.0,
+            }
+        }
+    }
+    """
+    static let data = jsonString.data(using: .utf8)!
+    static let nowhere = try! JSONDecoder().decode(Point.self, from: data)
 }
