@@ -26,7 +26,7 @@ struct Point: Identifiable, Codable {
     // Adapted from https://medium.com/@nictheawesome/using-codable-with-nested-json-is-both-easy-and-fun-19375246c9ff
     enum CodingKeys: String, CodingKey {
         case point = "point"
-        case id = "pk"
+        case id = "id"
         case title = "title"
         case latitude = "latitude"
         case longitude = "longitude"
@@ -62,7 +62,7 @@ struct TestPoints {
     // Test JSON decoding
     static let jsonString = """
     {"point": {
-        "pk": "12345678",
+        "id": "12345678",
         "title": "Null Island",
         "latitude": 0.0,
         "longitude": 0.0,
