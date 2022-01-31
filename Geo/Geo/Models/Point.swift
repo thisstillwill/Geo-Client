@@ -26,9 +26,8 @@ struct Point: Identifiable, Codable {
     // Adapted from https://medium.com/@nictheawesome/using-codable-with-nested-json-is-both-easy-and-fun-19375246c9ff
     enum CodingKeys: String, CodingKey {
         case point = "point"
-        case id = "id"
+        case id = "pk"
         case title = "title"
-        case location = "location"
         case latitude = "latitude"
         case longitude = "longitude"
     }
@@ -37,9 +36,8 @@ struct Point: Identifiable, Codable {
         let response = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .point)
         id = try response.decode(String.self, forKey: .id)
         title = try response.decode(String.self, forKey: .id)
-        let coordinate = try response.nestedContainer(keyedBy: CodingKeys.self, forKey: .location)
-        let latitude = try coordinate.decode(Double.self, forKey: .latitude)
-        let longitude = try coordinate.decode(Double.self, forKey: .longitude)
+        let latitude = try response.decode(Double.self, forKey: .latitude)
+        let longitude = try response.decode(Double.self, forKey: .longitude)
         location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     func encode(to encoder: Encoder) throws {
@@ -47,9 +45,8 @@ struct Point: Identifiable, Codable {
         var response = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .point)
         try response.encode(id, forKey: .id)
         try response.encode(title, forKey: .title)
-        var coordinate = response.nestedContainer(keyedBy: CodingKeys.self, forKey: .location)
-        try coordinate.encode(location.latitude, forKey: .latitude)
-        try coordinate.encode(location.longitude, forKey: .longitude)
+        try response.encode(location.latitude, forKey: .latitude)
+        try response.encode(location.longitude, forKey: .longitude)
     }
 }
 
@@ -65,12 +62,10 @@ struct TestPoints {
     // Test JSON decoding
     static let jsonString = """
     {"point": {
-        "id": "12345678",
+        "pk": "12345678",
         "title": "Null Island",
-        "location": {
-            "latitude": 0.0,
-            "longitude": 0.0,
-            }
+        "latitude": 0.0,
+        "longitude": 0.0,
         }
     }
     """
