@@ -16,7 +16,7 @@ struct Point: Identifiable, Codable {
     location: CLLocationCoordinate2D
     
     // Overloaded init for testing and server upload
-    init(id: String?, title: String, location: CLLocationCoordinate2D) {
+    init(id: String, title: String, location: CLLocationCoordinate2D) {
         self.id = id
         self.title = title
         self.location = location
@@ -25,24 +25,21 @@ struct Point: Identifiable, Codable {
     // Facilitate serialization
     // Adapted from https://medium.com/@nictheawesome/using-codable-with-nested-json-is-both-easy-and-fun-19375246c9ff
     enum CodingKeys: String, CodingKey {
-        case point = "point"
         case id = "id"
         case title = "title"
         case latitude = "latitude"
         case longitude = "longitude"
     }
     init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let response = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .point)
+        let response = try decoder.container(keyedBy: CodingKeys.self)
         id = try response.decode(String.self, forKey: .id)
-        title = try response.decode(String.self, forKey: .id)
+        title = try response.decode(String.self, forKey: .title)
         let latitude = try response.decode(Double.self, forKey: .latitude)
         let longitude = try response.decode(Double.self, forKey: .longitude)
         location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        var response = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .point)
+        var response = encoder.container(keyedBy: CodingKeys.self)
         try response.encode(id, forKey: .id)
         try response.encode(title, forKey: .title)
         try response.encode(location.latitude, forKey: .latitude)
@@ -61,12 +58,11 @@ struct TestPoints {
     
     // Test JSON decoding
     static let jsonString = """
-    {"point": {
+    {
         "id": "12345678",
         "title": "Null Island",
         "latitude": 0.0,
         "longitude": 0.0,
-        }
     }
     """
     static let data = jsonString.data(using: .utf8)!

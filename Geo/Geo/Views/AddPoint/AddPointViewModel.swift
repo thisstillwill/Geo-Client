@@ -31,7 +31,7 @@ final class AddPointViewModel: ObservableObject {
         if isValid() {
             // Create a new point matching current location
             state.showAlert = false
-            let newPoint = Point(id: nil, title: state.title, location: state.location!)
+            let newPoint = Point(id: "", title: state.title, location: state.location!)
             guard let encodedPoint = try? JSONEncoder().encode(newPoint) else {
                 print("Failed to encode new point")
                 return
@@ -63,7 +63,6 @@ final class AddPointViewModel: ObservableObject {
                 }
             }
             task.resume()
-            
         }
         else {
             state.showAlert = true
