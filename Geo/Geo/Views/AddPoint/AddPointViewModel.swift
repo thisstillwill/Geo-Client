@@ -13,6 +13,7 @@ struct AddPointState {
     var title: String = ""
     var location: CLLocationCoordinate2D?
     var showAlert = false
+    var hasSubmitted = false
 }
 
 final class AddPointViewModel: ObservableObject {
@@ -63,6 +64,7 @@ final class AddPointViewModel: ObservableObject {
                 }
             }
             task.resume()
+            print("Submitted: \(state.hasSubmitted)")
         }
         else {
             state.showAlert = true

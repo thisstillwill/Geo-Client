@@ -25,7 +25,11 @@ struct MapView: View {
                 annotationItems: viewModel.annotations
             ) {
                 point in MapAnnotation(coordinate: point.location) {
-                    PointAnnotationView(title: point.title)
+                    NavigationLink {
+                        PointAnnotationDetailsView(point: point)
+                    } label: {
+                        PointAnnotationView()
+                    }
                 }
             }
             .ignoresSafeArea()

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4A11D19B27750048009DCC65 /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11D19A27750048009DCC65 /* Point.swift */; };
+		4A25833327B07CBE008047CE /* PointAnnotationDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A25833227B07CBE008047CE /* PointAnnotationDetailsView.swift */; };
 		4A35255B27A0E1180093C847 /* AddPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A35255A27A0E1180093C847 /* AddPointView.swift */; };
 		4A35255E27A0E8D50093C847 /* AddPointViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A35255D27A0E8D50093C847 /* AddPointViewModel.swift */; };
 		4A40AABE2742C6C9007BA2F4 /* Geo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A40AABD2742C6C9007BA2F4 /* Geo.swift */; };
@@ -23,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		4A11D19A27750048009DCC65 /* Point.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
+		4A25833227B07CBE008047CE /* PointAnnotationDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointAnnotationDetailsView.swift; sourceTree = "<group>"; };
 		4A35255A27A0E1180093C847 /* AddPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPointView.swift; sourceTree = "<group>"; };
 		4A35255D27A0E8D50093C847 /* AddPointViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPointViewModel.swift; sourceTree = "<group>"; };
 		4A40AABD2742C6C9007BA2F4 /* Geo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geo.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 				4ABC629F2730E074001AA1CD /* CircleButton.swift */,
 				4A40AAB92742B5AA007BA2F4 /* MapView */,
 				4A61DA2C278F309B00D3D4EE /* PointAnnotationView.swift */,
+				4A25833227B07CBE008047CE /* PointAnnotationDetailsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 				4A11D19B27750048009DCC65 /* Point.swift in Sources */,
 				4ABC62A02730E074001AA1CD /* CircleButton.swift in Sources */,
 				4AC6292E273CDE5500E003FE /* MapViewModel.swift in Sources */,
+				4A25833327B07CBE008047CE /* PointAnnotationDetailsView.swift in Sources */,
 				4A40AABE2742C6C9007BA2F4 /* Geo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
