@@ -9,19 +9,15 @@
 import SwiftUI
 import MapKit
 
-// By default map is centered roughly on West Point, New York
+// By default map is centered on "Null Island"
 enum MapDetails {
-    static let defaultLocation = CLLocationCoordinate2D(latitude: 41.23, longitude: -73.58)
+    static let defaultLocation = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
     static let defaultSpan = MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
 }
 
 final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
-    /* TODO:
-     By using MapUserTrackingMode, the zoom level will be auto-adjusted.
-     If I want to keep a closer zoom by default, I will need to handle user tracking myself
-     based on location changes.
-     */
+    @Published var currentLocation: CLLocationCoordinate2D?
     @Published var region = MKCoordinateRegion(
         center: MapDetails.defaultLocation,
         span: MapDetails.defaultSpan
@@ -29,25 +25,25 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
     @Published var trackingMode: MapUserTrackingMode = .none
     @Published var annotations: [Point] = []
     
-    var locationManager: CLLocationManager?
+    private var hasSetRegion = false
+    private let locationManager = CLLocationManager()
     
-    func checkLocationServicesEnabled() {
+    override init() {
+        super.init()
+        
+        self.locationManager.delegate = self
+        self.locationManager.activityType = CLActivityType.other
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        
         if CLLocationManager.locationServicesEnabled() {
-            locationManager = CLLocationManager()
-            locationManager!.delegate = self
-            locationManager?.activityType = CLActivityType.other
-            locationManager?.desiredAccuracy = kCLLocationAccuracyBest
-            //annotations = getAnnotations()
+            self.locationManager.startUpdatingLocation()
         } else {
             print("Location services is required to use this app.")
         }
     }
     
     func checkLocationAuthorized() {
-        guard let locationManager = locationManager else { return }
-        
         switch locationManager.authorizationStatus {
-            
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
         case .restricted:
@@ -66,45 +62,29 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
         checkLocationAuthorized()
     }
     
-    func getCurrentLocation() -> CLLocationCoordinate2D {
-        return locationManager!.location!.coordinate
-    }
-    
-    /* TODO:
-     Replace function with actual network call
-     */
-    func getMapAnnotations() {
-        // Configure data request
-        let currentLocation = getCurrentLocation()
-        let url = URL(string: "http://localhost:6379/points?latitude=\(currentLocation.latitude)&longitude=\(currentLocation.longitude)")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        
-        // Create and start data task
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print ("error: \(error)")
-                return
-            }
-            guard let response = response as? HTTPURLResponse,
-                  (200...299).contains(response.statusCode) else {
-                      print ("server error")
-                      return
-                  }
-            guard let data = data else {
-                print("error: did not receive data")
-                return
-            }
-            do {
-                let points = try JSONDecoder().decode([Point].self, from: data)
-                print(points)
-                self.annotations = points
-            } catch {
-                print("error: could not deserialize JSON")
-                return
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            self.currentLocation = location.coordinate
+            
+            if !hasSetRegion {
+                self.region = MKCoordinateRegion(center: location.coordinate, span: MapDetails.defaultSpan)
+                hasSetRegion = true
             }
         }
-        task.resume()
+    }
+    
+    func getMapAnnotations() async throws {
+        
+        guard let currentLocation = currentLocation else { return }
+        
+        let url = URL(string: "http://localhost:6379/points?latitude=\(currentLocation.latitude)&longitude=\(currentLocation.longitude)")!
+        
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let points = try JSONDecoder().decode([Point].self, from: data)
+        
+        DispatchQueue.main.async {
+            self.annotations = points
+        }
         
 //        annotations.append(contentsOf: TestPoints.points)
 //        annotations.append(TestPoints.lot19)

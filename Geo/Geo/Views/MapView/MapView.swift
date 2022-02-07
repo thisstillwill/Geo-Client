@@ -11,18 +11,18 @@ import MapKit
 
 struct MapView: View {
     
-    @StateObject var viewModel = MapViewModel()
+    @StateObject var locationManager = MapViewModel()
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             
             // Main map screen
             Map(
-                coordinateRegion: $viewModel.region,
+                coordinateRegion: $locationManager.region,
                 interactionModes: MapInteractionModes.all,
                 showsUserLocation: true,
-                userTrackingMode: $viewModel.trackingMode,
-                annotationItems: viewModel.annotations
+                userTrackingMode: $locationManager.trackingMode,
+                annotationItems: locationManager.annotations
             ) {
                 point in MapAnnotation(coordinate: point.location) {
                     NavigationLink {
@@ -33,13 +33,21 @@ struct MapView: View {
                 }
             }
             .ignoresSafeArea()
-            .onAppear {
-                viewModel.checkLocationServicesEnabled()
-                viewModel.getMapAnnotations()
+            .task {
+                do {
+                    try await locationManager.getMapAnnotations()
+                    while true {
+                        try await Task.sleep(nanoseconds: 5_000_000_000)
+                        try await locationManager.getMapAnnotations()
+                    }
+                } catch {
+                    print("Could not connect to server!")
+                    return
+                }
             }
             
             // Add point button
-            NavigationLink(destination: AddPointView().environmentObject(viewModel), label: {
+            NavigationLink(destination: AddPointView().environmentObject(locationManager), label: {
                 Image(systemName: "plus")
             })
                 .buttonStyle(CircleButton(color: .red, radius: 100))

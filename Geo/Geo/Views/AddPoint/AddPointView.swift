@@ -47,7 +47,7 @@ struct AddPointView: View {
                 .navigationTitle("Add Point")
         }
         .onAppear {
-            viewModel.state.location = locationManager.getCurrentLocation()
+            viewModel.state.location = locationManager.currentLocation
         }
     }
 }
