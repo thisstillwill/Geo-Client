@@ -25,7 +25,16 @@ struct AddPointView: View {
                 
                 // Submit button
                 Section {
-                    Button(action: viewModel.submitForm) {
+                    Button(action: {
+                        Task {
+                            do {
+                                try await viewModel.submitForm()
+                            } catch {
+                                print("Could not submit point to server!")
+                                return
+                            }
+                        }
+                    }) {
                         HStack {
                             Spacer()
                             Text("Submit")
