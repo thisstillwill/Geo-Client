@@ -20,12 +20,17 @@ struct PointAnnotationDetailsView: View {
             Text(point.title)
                 .font(.title)
                 .fontWeight(.black)
+            Text(point.body)
+                .font(.body)
+                .fontWeight(.regular)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
     }
 }
 
 struct PointAnnotationDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        PointAnnotationDetailsView(point: TestPoints.dod)
+        PointAnnotationDetailsView(point: TestPoints.lot19)
     }
 }

@@ -19,8 +19,10 @@ struct AddPointView: View {
             Form(content: {
                 
                 // Point information fields
-                Section(header: Text("Information")) {
+                Section(header: Text("Title and Description")) {
                     TextField("Title", text: $viewModel.state.title)
+                    TextEditor(text: $viewModel.state.body)
+                        .frame(minHeight: 120)
                 }
                 
                 // Submit button
@@ -63,6 +65,6 @@ struct AddPointView: View {
 
 struct AddPointView_Previews: PreviewProvider {
     static var previews: some View {
-        AddPointView()
+        AddPointView().environmentObject(MapViewModel())
     }
 }
