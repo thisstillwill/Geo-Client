@@ -20,6 +20,7 @@
 		4ABC62A02730E074001AA1CD /* CircleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ABC629F2730E074001AA1CD /* CircleButton.swift */; };
 		4ABC62A22730E57C001AA1CD /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ABC62A12730E57B001AA1CD /* MapView.swift */; };
 		4AC6292E273CDE5500E003FE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC6292D273CDE5500E003FE /* LocationManager.swift */; };
+		4AF1509927E7AAA300960AE7 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF1509827E7AAA300960AE7 /* SettingsManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		4ABC629F2730E074001AA1CD /* CircleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
 		4ABC62A12730E57B001AA1CD /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		4AC6292D273CDE5500E003FE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		4AF1509827E7AAA300960AE7 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				4AC6292D273CDE5500E003FE /* LocationManager.swift */,
+				4AF1509827E7AAA300960AE7 /* SettingsManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -208,6 +211,7 @@
 				4ABC62A02730E074001AA1CD /* CircleButton.swift in Sources */,
 				4AC6292E273CDE5500E003FE /* LocationManager.swift in Sources */,
 				4A25833327B07CBE008047CE /* PointAnnotationDetailsView.swift in Sources */,
+				4AF1509927E7AAA300960AE7 /* SettingsManager.swift in Sources */,
 				4A40AABE2742C6C9007BA2F4 /* Geo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

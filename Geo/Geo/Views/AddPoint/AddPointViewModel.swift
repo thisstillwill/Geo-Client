@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreLocation
+import SwiftUI
 
 struct AddPointState {
     var title: String = ""
@@ -19,9 +20,11 @@ struct AddPointState {
 
 final class AddPointViewModel: ObservableObject {
     
+    @ObservedObject var settingsManager: SettingsManager
     @Published var state: AddPointState
     
-    init() {
+    init(settingsManager: SettingsManager) {
+        self.settingsManager = settingsManager
         self.state = AddPointState()
     }
     
@@ -38,8 +41,13 @@ final class AddPointViewModel: ObservableObject {
         let newPoint = Point(id: "", title: state.title, body: state.body, location: state.location!)
         let encodedPoint = try JSONEncoder().encode(newPoint)
         
-        let url = URL(string: "http://localhost:6379/points")!
-        var request = URLRequest(url: url)
+        var components = URLComponents()
+        components.scheme = settingsManager.scheme
+        components.host = settingsManager.host
+        components.port = settingsManager.port
+        components.path = "/points"
+        
+        var request = URLRequest(url: components.url!)
         request.httpMethod = "POST"
         
         let (_, response) = try await URLSession.shared.upload(for: request, from: encodedPoint)

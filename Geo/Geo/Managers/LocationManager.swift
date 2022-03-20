@@ -17,6 +17,8 @@ enum MapDetails {
 
 final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
+    @ObservedObject var settingsManager: SettingsManager
+    
     @Published var currentLocation: CLLocationCoordinate2D?
     @Published var region = MKCoordinateRegion(
         center: MapDetails.defaultLocation,
@@ -28,7 +30,10 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     private var hasSetRegion = false
     private let locationManager = CLLocationManager()
     
-    override init() {
+    init(settingsManager: SettingsManager) {
+        
+        self.settingsManager = settingsManager
+        
         super.init()
         
         self.locationManager.delegate = self
@@ -77,9 +82,18 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         
         guard let currentLocation = currentLocation else { return }
         
-        let url = URL(string: "http://localhost:6379/points?latitude=\(currentLocation.latitude)&longitude=\(currentLocation.longitude)")!
+        var components = URLComponents()
+        components.scheme = settingsManager.scheme
+        components.host = settingsManager.host
+        components.port = settingsManager.port
+        components.path = "/points"
+        components.queryItems = [
+            URLQueryItem(name: "latitude", value: String(currentLocation.latitude)),
+            URLQueryItem(name: "longitude", value: String(currentLocation.longitude)),
+            URLQueryItem(name: "radius", value: String(settingsManager.searchRadiusMeters))
+        ]
         
-        let (data, _) = try await URLSession.shared.data(from: url)
+        let (data, _) = try await URLSession.shared.data(from: components.url!)
         let points = try JSONDecoder().decode([Point].self, from: data)
         
         DispatchQueue.main.async {
@@ -93,7 +107,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
     
     func inRange(otherLocation: CLLocationCoordinate2D) -> Bool {
-        return (currentLocation?.distance(from: otherLocation) ?? Double.infinity) < 400
+        return (currentLocation?.distance(from: otherLocation) ?? Double.infinity) < settingsManager.interactRadiusMeters
     }
 }
 

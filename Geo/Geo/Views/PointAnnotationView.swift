@@ -11,7 +11,9 @@ import MapKit
 
 struct PointAnnotationView: View {
     
+    @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var locationManager: LocationManager
+    
     let point: Point
     
     var body: some View {
@@ -19,10 +21,10 @@ struct PointAnnotationView: View {
             NavigationLink {
                 PointAnnotationDetailsView(point: point)
             } label: {
-                PointAnnotationIconView(accent: .red)
+                PointAnnotationIconView(accent: settingsManager.inRangeColor)
             }
         } else {
-            PointAnnotationIconView(accent: .gray)
+            PointAnnotationIconView(accent: settingsManager.notInRangeColor)
         }
     }
 }
@@ -47,6 +49,8 @@ struct PointAnnotationIconView: View {
 
 struct PointAnnotationView_Previews: PreviewProvider {
     static var previews: some View {
-        PointAnnotationView(point: TestPoints.lot19).environmentObject(LocationManager())
+        PointAnnotationView(point: TestPoints.lot19)
+            .environmentObject(SettingsManager())
+            .environmentObject(LocationManager(settingsManager: SettingsManager()))
     }
 }

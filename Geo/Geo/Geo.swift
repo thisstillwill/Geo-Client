@@ -10,10 +10,20 @@ import SwiftUI
 
 @main
 struct Geo: App {
+    
+    let settingsManager: SettingsManager
+    let locationManager: LocationManager
+    
+    init() {
+        settingsManager = SettingsManager()
+        locationManager = LocationManager(settingsManager: settingsManager)
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(LocationManager())
+                .environmentObject(settingsManager)
+                .environmentObject(locationManager)
         }
     }
 }

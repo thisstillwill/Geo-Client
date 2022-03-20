@@ -11,6 +11,7 @@ import MapKit
 
 struct MapView: View {
     
+    @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var locationManager: LocationManager
     
     var body: some View {
@@ -25,7 +26,9 @@ struct MapView: View {
                 annotationItems: locationManager.annotations
             ) {
                 point in MapAnnotation(coordinate: point.location) {
-                    PointAnnotationView(point: point).environmentObject(locationManager)
+                    PointAnnotationView(point: point)
+                        .environmentObject(settingsManager)
+                        .environmentObject(locationManager)
                 }
             }
             .ignoresSafeArea()
@@ -33,7 +36,7 @@ struct MapView: View {
                 do {
                     while true {
                         try await locationManager.getMapAnnotations()
-                        try await Task.sleep(nanoseconds: 5_000_000_000)
+                        try await Task.sleep(nanoseconds: settingsManager.mapRefreshDelay)
                     }
                 } catch {
                     print("Could not connect to server!")
@@ -42,7 +45,7 @@ struct MapView: View {
             }
             
             // Add point button
-            NavigationLink(destination: AddPointView(), label: {
+            NavigationLink(destination: AddPointView(settingsManager: settingsManager), label: {
                 Image(systemName: "plus")
             })
                 .buttonStyle(CircleButton(color: .red, radius: 100))
@@ -53,6 +56,8 @@ struct MapView: View {
 
 struct MapView_Previews: PreviewProvider {
     static var previews: some View {
-        MapView().environmentObject(LocationManager())
+        MapView()
+            .environmentObject(SettingsManager())
+            .environmentObject(LocationManager(settingsManager: SettingsManager()))
     }
 }
