@@ -35,7 +35,6 @@ final class AddPointViewModel: ObservableObject {
             return
         }
         
-        state.showAlert = false
         let newPoint = Point(id: "", title: state.title, body: state.body, location: state.location!)
         let encodedPoint = try JSONEncoder().encode(newPoint)
         
@@ -47,5 +46,10 @@ final class AddPointViewModel: ObservableObject {
 
         guard let response = response as? HTTPURLResponse,
               (200...299).contains(response.statusCode) else { throw NSError() }
+        
+        DispatchQueue.main.async {
+            self.state.showAlert = false
+            self.state.hasSubmitted = true
+        }
     }
 }

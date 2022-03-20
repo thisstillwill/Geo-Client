@@ -15,50 +15,54 @@ struct AddPointView: View {
     @EnvironmentObject var locationManager: LocationManger
     
     var body: some View {
-        NavigationView {
-            Form(content: {
-                
-                // Point information fields
-                Section(header: Text("Title and Description")) {
-                    TextField("Title", text: $viewModel.state.title)
-                    TextEditor(text: $viewModel.state.body)
-                        .frame(minHeight: 120)
-                }
-                
-                // Submit button
-                Section {
-                    Button(action: {
-                        Task {
-                            do {
-                                try await viewModel.submitForm()
-                            } catch {
-                                print("Could not submit point to server!")
-                                return
+        if (!viewModel.state.hasSubmitted) {
+            NavigationView {
+                Form(content: {
+                    
+                    // Point information fields
+                    Section(header: Text("Title and Description")) {
+                        TextField("Title", text: $viewModel.state.title)
+                        TextEditor(text: $viewModel.state.body)
+                            .frame(minHeight: 120)
+                    }
+                    
+                    // Submit button
+                    Section {
+                        Button(action: {
+                            Task {
+                                do {
+                                    try await viewModel.submitForm()
+                                } catch {
+                                    print("Could not submit point to server!")
+                                    return
+                                }
+                            }
+                        }) {
+                            HStack {
+                                Spacer()
+                                Text("Submit")
+                                Spacer()
                             }
                         }
-                    }) {
-                        HStack {
-                            Spacer()
-                            Text("Submit")
-                            Spacer()
+                        .foregroundColor(.white)
+                        .padding(10)
+                        .background(Color.accentColor)
+                        .cornerRadius(8)
+                        .alert(isPresented: $viewModel.state.showAlert) {
+                            Alert(
+                                title: Text("Can't Add Point!"),
+                                message: Text("There are still missing form values.")
+                            )
                         }
                     }
-                    .foregroundColor(.white)
-                    .padding(10)
-                    .background(Color.accentColor)
-                    .cornerRadius(8)
-                    .alert(isPresented: $viewModel.state.showAlert) {
-                        Alert(
-                            title: Text("Can't Add Point!"),
-                            message: Text("There are still missing form values.")
-                        )
-                    }
-                }
-            })
-                .navigationTitle("Add Point")
-        }
-        .onAppear {
-            viewModel.state.location = locationManager.currentLocation
+                })
+                    .navigationTitle("Add Point")
+            }
+            .onAppear {
+                viewModel.state.location = locationManager.currentLocation
+            }
+        } else {
+            MapView()
         }
     }
 }
