@@ -25,7 +25,7 @@ struct MapView: View {
                 annotationItems: locationManager.annotations
             ) {
                 point in MapAnnotation(coordinate: point.location) {
-                    PointAnnotationView(point: point)
+                    PointAnnotationView(point: point).environmentObject(locationManager)
                 }
             }
             .ignoresSafeArea()
