@@ -15,7 +15,7 @@ enum MapDetails {
     static let defaultSpan = MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
 }
 
-final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
+final class LocationManger: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     @Published var currentLocation: CLLocationCoordinate2D?
     @Published var region = MKCoordinateRegion(
