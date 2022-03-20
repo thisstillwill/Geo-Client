@@ -13,7 +13,7 @@ struct Geo: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(LocationManger())
+                .environmentObject(LocationManager())
         }
     }
 }

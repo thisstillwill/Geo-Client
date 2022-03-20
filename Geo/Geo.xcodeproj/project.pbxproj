@@ -19,7 +19,7 @@
 		4A61DA2D278F309B00D3D4EE /* PointAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A61DA2C278F309B00D3D4EE /* PointAnnotationView.swift */; };
 		4ABC62A02730E074001AA1CD /* CircleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ABC629F2730E074001AA1CD /* CircleButton.swift */; };
 		4ABC62A22730E57C001AA1CD /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ABC62A12730E57B001AA1CD /* MapView.swift */; };
-		4AC6292E273CDE5500E003FE /* LocationManger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC6292D273CDE5500E003FE /* LocationManger.swift */; };
+		4AC6292E273CDE5500E003FE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC6292D273CDE5500E003FE /* LocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,7 +37,7 @@
 		4A61DA2C278F309B00D3D4EE /* PointAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointAnnotationView.swift; sourceTree = "<group>"; };
 		4ABC629F2730E074001AA1CD /* CircleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
 		4ABC62A12730E57B001AA1CD /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
-		4AC6292D273CDE5500E003FE /* LocationManger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManger.swift; sourceTree = "<group>"; };
+		4AC6292D273CDE5500E003FE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,22 +68,13 @@
 			path = AddPoint;
 			sourceTree = "<group>";
 		};
-		4A40AAB92742B5AA007BA2F4 /* MapView */ = {
-			isa = PBXGroup;
-			children = (
-				4ABC62A12730E57B001AA1CD /* MapView.swift */,
-				4AC6292D273CDE5500E003FE /* LocationManger.swift */,
-			);
-			path = MapView;
-			sourceTree = "<group>";
-		};
 		4A40AABA2742B7C0007BA2F4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4ABC62A12730E57B001AA1CD /* MapView.swift */,
 				4A35255F27A0E9140093C847 /* AddPoint */,
 				4A4F062427235D8400497A25 /* ContentView.swift */,
 				4ABC629F2730E074001AA1CD /* CircleButton.swift */,
-				4A40AAB92742B5AA007BA2F4 /* MapView */,
 				4A61DA2C278F309B00D3D4EE /* PointAnnotationView.swift */,
 				4A25833227B07CBE008047CE /* PointAnnotationDetailsView.swift */,
 			);
@@ -109,6 +100,7 @@
 		4A4F061F27235D8400497A25 /* Geo */ = {
 			isa = PBXGroup;
 			children = (
+				4AF1509727E7A29900960AE7 /* Managers */,
 				4A11D1992774FFF2009DCC65 /* Models */,
 				4A40AABA2742B7C0007BA2F4 /* Views */,
 				4A4F062627235D8B00497A25 /* Assets.xcassets */,
@@ -126,6 +118,14 @@
 				4A4F062927235D8B00497A25 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		4AF1509727E7A29900960AE7 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				4AC6292D273CDE5500E003FE /* LocationManager.swift */,
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -206,7 +206,7 @@
 				4A35255B27A0E1180093C847 /* AddPointView.swift in Sources */,
 				4A11D19B27750048009DCC65 /* Point.swift in Sources */,
 				4ABC62A02730E074001AA1CD /* CircleButton.swift in Sources */,
-				4AC6292E273CDE5500E003FE /* LocationManger.swift in Sources */,
+				4AC6292E273CDE5500E003FE /* LocationManager.swift in Sources */,
 				4A25833327B07CBE008047CE /* PointAnnotationDetailsView.swift in Sources */,
 				4A40AABE2742C6C9007BA2F4 /* Geo.swift in Sources */,
 			);

@@ -11,7 +11,7 @@ import MapKit
 
 struct MapView: View {
     
-    @EnvironmentObject var locationManager: LocationManger
+    @EnvironmentObject var locationManager: LocationManager
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -53,6 +53,6 @@ struct MapView: View {
 
 struct MapView_Previews: PreviewProvider {
     static var previews: some View {
-        MapView().environmentObject(LocationManger())
+        MapView().environmentObject(LocationManager())
     }
 }

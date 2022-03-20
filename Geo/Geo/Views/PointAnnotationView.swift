@@ -11,7 +11,7 @@ import MapKit
 
 struct PointAnnotationView: View {
     
-    @EnvironmentObject var locationManager: LocationManger
+    @EnvironmentObject var locationManager: LocationManager
     let point: Point
     
     var body: some View {
@@ -47,6 +47,6 @@ struct PointAnnotationIconView: View {
 
 struct PointAnnotationView_Previews: PreviewProvider {
     static var previews: some View {
-        PointAnnotationView(point: TestPoints.lot19).environmentObject(LocationManger())
+        PointAnnotationView(point: TestPoints.lot19).environmentObject(LocationManager())
     }
 }

@@ -12,7 +12,7 @@ import CoreLocation
 struct AddPointView: View {
     
     @StateObject private var viewModel = AddPointViewModel()
-    @EnvironmentObject var locationManager: LocationManger
+    @EnvironmentObject var locationManager: LocationManager
     
     var body: some View {
         if (!viewModel.state.hasSubmitted) {
@@ -69,6 +69,6 @@ struct AddPointView: View {
 
 struct AddPointView_Previews: PreviewProvider {
     static var previews: some View {
-        AddPointView().environmentObject(LocationManger())
+        AddPointView().environmentObject(LocationManager())
     }
 }
