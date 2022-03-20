@@ -25,20 +25,15 @@ struct MapView: View {
                 annotationItems: locationManager.annotations
             ) {
                 point in MapAnnotation(coordinate: point.location) {
-                    NavigationLink {
-                        PointAnnotationDetailsView(point: point)
-                    } label: {
-                        PointAnnotationView()
-                    }
+                    PointAnnotationView(point: point)
                 }
             }
             .ignoresSafeArea()
             .task {
                 do {
-                    try await locationManager.getMapAnnotations()
                     while true {
-                        try await Task.sleep(nanoseconds: 5_000_000_000)
                         try await locationManager.getMapAnnotations()
+                        try await Task.sleep(nanoseconds: 5_000_000_000)
                     }
                 } catch {
                     print("Could not connect to server!")

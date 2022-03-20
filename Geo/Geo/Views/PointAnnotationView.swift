@@ -11,22 +11,28 @@ import MapKit
 
 struct PointAnnotationView: View {
     
+    let point: Point
+    
     var body: some View {
-        VStack(spacing: 0) {
-            // TODO: Change annotation design?
-            Image(systemName: "mappin.circle.fill")
-                .renderingMode(.original)
-                .font(.title)
-            Image(systemName: "arrowtriangle.down.fill")
-                .font(.caption)
-                .foregroundColor(.red)
-                .offset(x: 0, y: -5)
+        NavigationLink {
+            PointAnnotationDetailsView(point: point)
+        } label: {
+            VStack(spacing: 0) {
+                // TODO: Change annotation design?
+                Image(systemName: "mappin.circle.fill")
+                    .renderingMode(.original)
+                    .font(.title)
+                Image(systemName: "arrowtriangle.down.fill")
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .offset(x: 0, y: -5)
+            }
         }
     }
 }
 
 struct PointAnnotationView_Previews: PreviewProvider {
     static var previews: some View {
-        PointAnnotationView()
+        PointAnnotationView(point: TestPoints.lot19)
     }
 }
