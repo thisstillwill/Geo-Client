@@ -45,7 +45,7 @@ struct MapView: View {
             }
             
             // Add point button
-            NavigationLink(destination: AddPointView(settingsManager: settingsManager), label: {
+            NavigationLink(destination: AddPointView(settingsManager: settingsManager, locationManager: locationManager), label: {
                 Image(systemName: "plus")
             })
                 .buttonStyle(CircleButton(color: .red, radius: 100))

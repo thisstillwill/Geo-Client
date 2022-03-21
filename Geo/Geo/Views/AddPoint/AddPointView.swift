@@ -12,59 +12,58 @@ import CoreLocation
 struct AddPointView: View {
     
     @ObservedObject var viewModel: AddPointViewModel
-    @EnvironmentObject var locationManager: LocationManager
+    @State var returnToMap = false
     
-    init (settingsManager: SettingsManager) {
-        self.viewModel = AddPointViewModel(settingsManager: settingsManager)
+    init (settingsManager: SettingsManager, locationManager: LocationManager) {
+        self.viewModel = AddPointViewModel(settingsManager: settingsManager, locationManager: locationManager)
     }
     
     var body: some View {
-        if (!viewModel.state.hasSubmitted) {
-            NavigationView {
-                Form(content: {
-                    
-                    // Point information fields
-                    Section(header: Text("Title and Description")) {
-                        TextField("Title", text: $viewModel.state.title)
-                        TextEditor(text: $viewModel.state.body)
-                            .frame(minHeight: 120)
-                    }
-                    
-                    // Submit button
-                    Section {
-                        Button(action: {
-                            Task {
-                                do {
-                                    try await viewModel.submitForm()
-                                } catch {
-                                    print("Could not submit point to server!")
-                                    return
+        if (!returnToMap) {
+            Form(content: {
+                
+                // Point information fields
+                Section(header: Text("Title and Description")) {
+                    TextEditor(text: $viewModel.title)
+                    TextEditor(text: $viewModel.description)
+                        .frame(minHeight: 200, maxHeight: 200)
+                }
+                
+                // Submit button
+                Section {
+                    Button(action: {
+                        Task {
+                            do {
+                                try await viewModel.submitForm()
+                                if (viewModel.state.hasSubmitted) {
+                                    self.returnToMap = true
                                 }
-                            }
-                        }) {
-                            HStack {
-                                Spacer()
-                                Text("Submit")
-                                Spacer()
+                            } catch {
+                                print("Could not submit point to server!")
+                                return
                             }
                         }
-                        .foregroundColor(.white)
-                        .padding(10)
-                        .background(Color.accentColor)
-                        .cornerRadius(8)
-                        .alert(isPresented: $viewModel.state.showAlert) {
-                            Alert(
-                                title: Text("Can't Add Point!"),
-                                message: Text("There are still missing form values.")
-                            )
+                    }) {
+                        HStack {
+                            Spacer()
+                            Text("Submit")
+                            Spacer()
                         }
                     }
-                })
-                    .navigationTitle("Add Point")
-            }
-            .onAppear {
-                viewModel.state.location = locationManager.currentLocation
-            }
+                    .foregroundColor(.white)
+                    .padding(8)
+                    .background(Color.accentColor)
+                    .cornerRadius(8)
+                    .listRowBackground(Color.blue)
+                }
+            })
+                .navigationTitle("Add Point")
+                .alert(isPresented: $viewModel.state.showAlert) {
+                    Alert(
+                        title: Text(viewModel.state.alertTitle),
+                        message: Text(viewModel.state.alertMessage)
+                    )
+                }
         } else {
             MapView()
         }
@@ -73,8 +72,6 @@ struct AddPointView: View {
 
 struct AddPointView_Previews: PreviewProvider {
     static var previews: some View {
-        AddPointView(settingsManager: SettingsManager())
-            .environmentObject(SettingsManager())
-            .environmentObject(LocationManager(settingsManager: SettingsManager()))
+        AddPointView(settingsManager: SettingsManager(), locationManager: LocationManager(settingsManager: SettingsManager()))
     }
 }
