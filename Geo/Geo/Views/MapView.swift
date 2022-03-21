@@ -48,7 +48,7 @@ struct MapView: View {
             VStack(spacing: 20) {
                 // Reset view button
                 Button(action: {
-                    print("Reset view!")
+                    locationManager.resetRegion()
                 }) {
                     Image(systemName: "location.fill")
                 }.buttonStyle(

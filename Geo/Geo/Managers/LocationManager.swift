@@ -27,7 +27,6 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     @Published var trackingMode: MapUserTrackingMode = .none
     @Published var annotations: [Point] = []
     
-    private var hasSetRegion = false
     private let locationManager = CLLocationManager()
     
     init(settingsManager: SettingsManager) {
@@ -57,7 +56,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             print("You have denied this app location permission.")
         case .authorizedAlways, .authorizedWhenInUse:
             region = MKCoordinateRegion(center: locationManager.location?.coordinate ?? MapDetails.defaultLocation, span: MapDetails.defaultSpan)
-            trackingMode = .follow
+            trackingMode = .none
         @unknown default:
             break
         }
@@ -67,14 +66,17 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         checkLocationAuthorized()
     }
     
+    func resetRegion() {
+        guard let currentLocation = self.currentLocation else {
+            return
+        }
+        self.region = MKCoordinateRegion(center: currentLocation, span: MapDetails.defaultSpan)
+    }
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             self.currentLocation = location.coordinate
-            
-            if !hasSetRegion {
-                self.region = MKCoordinateRegion(center: location.coordinate, span: MapDetails.defaultSpan)
-                hasSetRegion = true
-            }
+            self.region = MKCoordinateRegion(center: location.coordinate, span: MapDetails.defaultSpan)
         }
     }
     
@@ -111,10 +113,29 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
 }
 
+// TODO: Determine if I actually need these
 extension CLLocationCoordinate2D {
     func distance(from: CLLocationCoordinate2D) -> CLLocationDistance {
         let from = CLLocation(latitude: from.latitude, longitude: from.longitude)
         let to = CLLocation(latitude: self.latitude, longitude: self.longitude)
         return from.distance(from: to)
+    }
+}
+
+extension CLLocationCoordinate2D: Equatable {
+    public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
+        lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
+    }
+}
+
+extension MKCoordinateSpan: Equatable {
+    public static func == (lhs: MKCoordinateSpan, rhs: MKCoordinateSpan) -> Bool {
+        lhs.latitudeDelta == rhs.latitudeDelta && lhs.longitudeDelta == rhs.longitudeDelta
+    }
+}
+
+extension MKCoordinateRegion: Equatable {
+    public static func == (lhs: MKCoordinateRegion, rhs: MKCoordinateRegion) -> Bool {
+        lhs.center == rhs.center && lhs.span == rhs.span
     }
 }
