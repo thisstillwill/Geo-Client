@@ -44,12 +44,32 @@ struct MapView: View {
                 }
             }
             
-            // Add point button
-            NavigationLink(destination: AddPointView(settingsManager: settingsManager, locationManager: locationManager), label: {
-                Image(systemName: "plus")
-            })
-                .buttonStyle(CircleButton(color: .red, radius: 100))
-                .offset(x: -50, y: -100)
+            // Button stack
+            VStack(spacing: 20) {
+                // Reset view button
+                Button(action: {
+                    print("Reset view!")
+                }) {
+                    Image(systemName: "location.fill")
+                }.buttonStyle(
+                    CircleIconButton(
+                        foregroundColor: .blue,
+                        backgroundColor: .white,
+                        fontSize: 30,
+                        fontWeight: .regular
+                    ))
+                // Add point button
+                NavigationLink(destination: AddPointView(settingsManager: settingsManager, locationManager: locationManager), label: {
+                    Image(systemName: "plus")
+                })
+                    .buttonStyle(
+                        CircleIconButton(
+                            foregroundColor: .white,
+                            backgroundColor: .red,
+                            fontSize: 72,
+                            fontWeight: .regular
+                        ))
+            }.offset(x: -30, y: -100)
         }
     }
 }
