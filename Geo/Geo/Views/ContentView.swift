@@ -15,7 +15,14 @@ struct ContentView: View {
             NavigationLink(destination: MapView(), label: {
                 Text("Enter")
             })
-                .buttonStyle(CircleButton(color: .red, radius: 200))
+                .buttonStyle(
+                    CircleButton(
+                        foregroundColor: .white,
+                        backgroundColor: .red,
+                        radius: 200,
+                        fontSize: 50,
+                        fontWeight: .semibold
+                    ))
                 .navigationTitle("Welcome")
         }
     }

@@ -1,27 +1,28 @@
 //
-//  CircleButton.swift
+//  CircleIconButton.swift
 //  Geo
 //
-//  Created by William Svoboda on 11/1/21.
-//  Copyright © 2021 William Svoboda. All rights reserved.
+//  Created by William Svoboda on 3/21/22.
+//  Copyright © 2022 William Svoboda. All rights reserved.
 //
 
 import SwiftUI
 
 struct CircleButton: ButtonStyle {
     
-    var color: Color
+    var foregroundColor: Color
+    var backgroundColor: Color
     var radius: CGFloat
+    var fontSize: CGFloat
+    var fontWeight: Font.Weight
     
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .foregroundColor(.white)
-            .font(.system(size: 50, weight: .semibold))
-            .background(
-                ZStack{
-                    Circle()
-                        .frame(width: radius, height: radius)
-                        .foregroundColor(color)
-                })
+        Circle()
+            .fill(backgroundColor)
+            .frame(width: radius, height: radius, alignment: .center)
+            .overlay(configuration.label
+                        .foregroundColor(foregroundColor)
+                        .font(.system(size: fontSize, weight: fontWeight))
+            )
     }
 }

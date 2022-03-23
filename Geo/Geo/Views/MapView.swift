@@ -45,31 +45,59 @@ struct MapView: View {
             }
             
             // Button stack
-            VStack(spacing: 20) {
+            VStack(spacing: 10) {
+                
                 // Reset view button
                 Button(action: {
                     locationManager.resetRegion()
                 }) {
                     Image(systemName: "location.fill")
                 }.buttonStyle(
-                    CircleIconButton(
+                    CircleButton(
                         foregroundColor: .blue,
                         backgroundColor: .white,
+                        radius: 65,
                         fontSize: 30,
                         fontWeight: .regular
                     ))
+                
+                // Refresh map button
+                Button(action: {
+                    Task {
+                        do {
+                            try await locationManager.getMapAnnotations()
+                        } catch {
+                            print("Could not connect to server!")
+                            return
+                        }
+                    }
+                }) {
+                    Image(systemName: "arrow.counterclockwise")
+                }.buttonStyle(
+                    CircleButton(
+                        foregroundColor: .white,
+                        backgroundColor: .gray,
+                        radius: 65,
+                        fontSize: 30,
+                        fontWeight: .regular
+                    ))
+                
                 // Add point button
                 NavigationLink(destination: AddPointView(settingsManager: settingsManager, locationManager: locationManager), label: {
                     Image(systemName: "plus")
                 })
                     .buttonStyle(
-                        CircleIconButton(
+                        CircleButton(
                             foregroundColor: .white,
                             backgroundColor: .red,
+                            radius: 120,
                             fontSize: 72,
                             fontWeight: .regular
                         ))
-            }.offset(x: -30, y: -100)
+            }.offset(
+                x: -(UIScreen.main.bounds.width / 16),
+                y: -(UIScreen.main.bounds.width / 8)
+            )
         }
     }
 }
