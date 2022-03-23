@@ -32,6 +32,16 @@ struct MapView: View {
                 }
             }
             .ignoresSafeArea()
+            .onChange(of: locationManager.region) { newRegion in
+                if (locationManager.followingUser) {
+                    guard let oldCenter = locationManager.currentLocation else {
+                        return
+                    }
+                    if (oldCenter != newRegion.center) {
+                        locationManager.followingUser = false
+                    }
+                }
+            }
             .task {
                 do {
                     while true {
@@ -49,6 +59,7 @@ struct MapView: View {
                 
                 // Reset view button
                 Button(action: {
+                    // TODO: Figure out using withAnimation?
                     locationManager.resetRegion()
                 }) {
                     Image(systemName: "location.fill")

@@ -24,8 +24,9 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         center: MapDetails.defaultLocation,
         span: MapDetails.defaultSpan
     )
-    @Published var trackingMode: MapUserTrackingMode = .none
+    @Published var trackingMode: MapUserTrackingMode = .follow
     @Published var annotations: [Point] = []
+    @Published var followingUser = true
     
     private let locationManager = CLLocationManager()
     
@@ -56,7 +57,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             print("You have denied this app location permission.")
         case .authorizedAlways, .authorizedWhenInUse:
             region = MKCoordinateRegion(center: locationManager.location?.coordinate ?? MapDetails.defaultLocation, span: MapDetails.defaultSpan)
-            trackingMode = .none
+            trackingMode = .follow
         @unknown default:
             break
         }
@@ -67,6 +68,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
     
     func resetRegion() {
+        self.followingUser = true
         guard let currentLocation = self.currentLocation else {
             return
         }
@@ -76,7 +78,10 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             self.currentLocation = location.coordinate
-            self.region = MKCoordinateRegion(center: location.coordinate, span: MapDetails.defaultSpan)
+            
+            if (self.followingUser) {
+                self.region = MKCoordinateRegion(center: location.coordinate, span: MapDetails.defaultSpan)
+            }
         }
     }
     
@@ -124,13 +129,17 @@ extension CLLocationCoordinate2D {
 
 extension CLLocationCoordinate2D: Equatable {
     public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
-        lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
+        let epsilon = 0.0001
+        return abs(lhs.latitude - rhs.latitude) < epsilon && abs(lhs.longitude - rhs.longitude) < epsilon
+        // lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
     }
 }
 
 extension MKCoordinateSpan: Equatable {
     public static func == (lhs: MKCoordinateSpan, rhs: MKCoordinateSpan) -> Bool {
-        lhs.latitudeDelta == rhs.latitudeDelta && lhs.longitudeDelta == rhs.longitudeDelta
+        let epsilon = 0.0001
+        return abs(lhs.latitudeDelta - rhs.latitudeDelta) < epsilon && abs(lhs.longitudeDelta - rhs.longitudeDelta) < epsilon
+        // lhs.latitudeDelta == rhs.latitudeDelta && lhs.longitudeDelta == rhs.longitudeDelta
     }
 }
 
