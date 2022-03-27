@@ -36,16 +36,17 @@ struct MapView: View {
             .ignoresSafeArea()
             .onChange(of: locationManager.region) { newRegion in
                 if (locationManager.followingUser) {
-                    guard let oldCenter = locationManager.currentLocation else {
-                        return
-                    }
+                    guard let oldCenter = locationManager.currentLocation else { return }
                     if (oldCenter != newRegion.center) {
                         locationManager.followingUser = false
                     }
                 }
             }
-            .task {
+            .onAppear {
                 updatingPoints = locationManager.startUpdatingAnnotations()
+            }
+            .onDisappear {
+                updatingPoints?.cancel()
             }
             
             // Button stack
@@ -83,8 +84,10 @@ struct MapView: View {
                 
                 // Add point button
                 Button(action: {
-                    updatingPoints?.cancel()
-                    showAddPointView.toggle()
+                    if locationManager.canAddPoint() {
+                        updatingPoints?.cancel()
+                        showAddPointView.toggle()
+                    }
                 }) {
                     Image(systemName: "plus")
                 }.buttonStyle(

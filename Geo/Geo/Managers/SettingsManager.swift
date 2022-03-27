@@ -17,6 +17,7 @@ final class SettingsManager: ObservableObject {
     @Published var mapRefreshDelay: UInt64 = 5_000_000_000
     @Published var searchRadiusMeters: CLLocationDistance = 1600
     @Published var interactRadiusMeters: CLLocationDistance = 200
+    @Published var adjacentPointRestriction: CLLocationDistance = 15
     @Published var inRangeColor: Color = .red
     @Published var notInRangeColor: Color = .gray
     @Published var maxTitleLength: Int = 60

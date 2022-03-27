@@ -132,6 +132,23 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     public func canInteract(otherLocation: CLLocationCoordinate2D) -> Bool {
         return (currentLocation?.distance(from: otherLocation) ?? Double.infinity) < settingsManager.interactRadiusMeters
     }
+    
+    public func canAddPoint() -> Bool {
+        guard let location = currentLocation else {
+            showAlert = true
+            alertTitle = "Application error!"
+            alertMessage = "Unable to find your current location."
+            return false
+        }
+        if annotations.allSatisfy( { $0.location.distance(from: location) > settingsManager.adjacentPointRestriction  }) {
+            return true
+        } else {
+            showAlert = true
+            alertTitle = "Distance error!"
+            alertMessage = "New points must be at least \(settingsManager.adjacentPointRestriction) meters from existing points."
+            return false
+        }
+    }
 }
 
 extension CLLocationCoordinate2D {

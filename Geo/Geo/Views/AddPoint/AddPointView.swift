@@ -15,6 +15,10 @@ struct AddPointView: View {
     @ObservedObject var viewModel: AddPointViewModel
     @Binding var isPresented: Bool
     
+    private var buttonColor: Color {
+        return viewModel.isValid() ? .accentColor : .gray
+    }
+    
     init (isPresented: Binding<Bool>, location: CLLocationCoordinate2D, settingsManager: SettingsManager) {
         print("Refresh!!!")
         self.viewModel = AddPointViewModel(location: location, settingsManager: settingsManager)
@@ -30,7 +34,6 @@ struct AddPointView: View {
                 Section(header: Text("Title")) {
                     TextEditor(text: $viewModel.title)
                         .frame(minHeight: 60)
-                    
                     ProgressView("\(viewModel.title.count)/\(settingsManager.maxTitleLength)", value: Double(viewModel.title.count), total: Double(settingsManager.maxTitleLength))
                 }
                 Section(header: Text("Description")) {
@@ -61,11 +64,12 @@ struct AddPointView: View {
                             Spacer()
                         }
                     }
+                    .disabled(!viewModel.isValid())
                     .foregroundColor(.white)
                     .padding(8)
-                    .background(Color.accentColor)
+                    .background(buttonColor)
                     .cornerRadius(8)
-                    .listRowBackground(Color.blue)
+                    .listRowBackground(buttonColor)
                 }
             })
                 .navigationTitle("Add Point")

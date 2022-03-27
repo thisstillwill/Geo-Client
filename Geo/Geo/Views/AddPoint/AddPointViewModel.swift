@@ -55,7 +55,7 @@ final class AddPointViewModel: ObservableObject {
         self.state = AddPointState()
     }
     
-    private func isValid() -> Bool {
+    public func isValid() -> Bool {
         return !title.isEmpty && !description.isEmpty
     }
     
