@@ -13,15 +13,19 @@ struct PointAnnotationView: View {
     
     @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var locationManager: LocationManager
+    @State var showPointDetailsView = false
     
     let point: Point
     
     var body: some View {
-        if (locationManager.inRange(otherLocation: point.location)) {
-            NavigationLink {
-                PointAnnotationDetailsView(point: point)
-            } label: {
-                PointAnnotationIconView(accent: settingsManager.inRangeColor)
+        if (locationManager.canInteract(otherLocation: point.location)) {
+            Button(action: {
+                showPointDetailsView = true
+            }) {
+                PointAnnotationIconView(accent: .red)
+            }
+            .sheet(isPresented: $showPointDetailsView) {
+                PointAnnotationDetailsView(isPresented: $showPointDetailsView, point: point)
             }
         } else {
             PointAnnotationIconView(accent: settingsManager.notInRangeColor)

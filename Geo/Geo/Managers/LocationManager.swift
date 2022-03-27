@@ -18,7 +18,6 @@ enum MapDetails {
 final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     @ObservedObject var settingsManager: SettingsManager
-    
     @Published var currentLocation: CLLocationCoordinate2D?
     @Published var region = MKCoordinateRegion(
         center: MapDetails.defaultLocation,
@@ -31,15 +30,11 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     private let locationManager = CLLocationManager()
     
     init(settingsManager: SettingsManager) {
-        
         self.settingsManager = settingsManager
-        
         super.init()
-        
         self.locationManager.delegate = self
         self.locationManager.activityType = CLActivityType.other
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        
         if CLLocationManager.locationServicesEnabled() {
             self.locationManager.startUpdatingLocation()
         } else {
@@ -47,7 +42,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         }
     }
     
-    func checkLocationAuthorized() {
+    private func checkLocationAuthorized() {
         switch locationManager.authorizationStatus {
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
@@ -63,11 +58,11 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         }
     }
     
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+    internal func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         checkLocationAuthorized()
     }
     
-    func resetRegion() {
+    public func resetRegion() {
         self.followingUser = true
         guard let currentLocation = self.currentLocation else {
             return
@@ -75,7 +70,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         self.region = MKCoordinateRegion(center: currentLocation, span: MapDetails.defaultSpan)
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             self.currentLocation = location.coordinate
             
@@ -85,7 +80,8 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         }
     }
     
-    func getMapAnnotations() async throws {
+    private func getMapAnnotations() async throws {
+        print("Getting annotations!")
         
         guard let currentLocation = currentLocation else { return }
         
@@ -106,19 +102,29 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         DispatchQueue.main.async {
             self.annotations = points
         }
-        
-//        annotations.append(contentsOf: TestPoints.points)
-//        annotations.append(TestPoints.lot19)
-//        annotations.append(TestPoints.nowhere)
-//        print(annotations)
     }
     
-    func inRange(otherLocation: CLLocationCoordinate2D) -> Bool {
+    public func startUpdatingAnnotations() -> Task<Void, Never> {
+        let task = Task {
+            do {
+                while true {
+                    // Explicitly check for cancellation request
+                    try Task.checkCancellation()
+                    try await getMapAnnotations()
+                    try await Task.sleep(nanoseconds: settingsManager.mapRefreshDelay)
+                }
+            } catch {
+                print("Updating annotations canceled!")
+            }
+        }
+        return task
+    }
+    
+    public func canInteract(otherLocation: CLLocationCoordinate2D) -> Bool {
         return (currentLocation?.distance(from: otherLocation) ?? Double.infinity) < settingsManager.interactRadiusMeters
     }
 }
 
-// TODO: Determine if I actually need these
 extension CLLocationCoordinate2D {
     func distance(from: CLLocationCoordinate2D) -> CLLocationDistance {
         let from = CLLocation(latitude: from.latitude, longitude: from.longitude)

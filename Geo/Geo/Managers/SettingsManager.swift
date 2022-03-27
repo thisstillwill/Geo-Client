@@ -19,6 +19,6 @@ final class SettingsManager: ObservableObject {
     @Published var interactRadiusMeters: CLLocationDistance = 200
     @Published var inRangeColor: Color = .red
     @Published var notInRangeColor: Color = .gray
-    @Published var maxTitleLength: Int = 50
+    @Published var maxTitleLength: Int = 60
     @Published var maxDescriptionLength: Int = 280
 }

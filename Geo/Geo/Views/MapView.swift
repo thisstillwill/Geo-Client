@@ -13,6 +13,8 @@ struct MapView: View {
     
     @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var locationManager: LocationManager
+    @State var showAddPointView = false
+    @State var updatingPoints: Task<Void, Never>?
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -20,7 +22,7 @@ struct MapView: View {
             // Main map screen
             Map(
                 coordinateRegion: $locationManager.region,
-                interactionModes: MapInteractionModes.all,
+                interactionModes: .all,
                 showsUserLocation: true,
                 userTrackingMode: $locationManager.trackingMode,
                 annotationItems: locationManager.annotations
@@ -43,15 +45,7 @@ struct MapView: View {
                 }
             }
             .task {
-                do {
-                    while true {
-                        try await locationManager.getMapAnnotations()
-                        try await Task.sleep(nanoseconds: settingsManager.mapRefreshDelay)
-                    }
-                } catch {
-                    print("Could not connect to server!")
-                    return
-                }
+                updatingPoints = locationManager.startUpdatingAnnotations()
             }
             
             // Button stack
@@ -74,14 +68,8 @@ struct MapView: View {
                 
                 // Refresh map button
                 Button(action: {
-                    Task {
-                        do {
-                            try await locationManager.getMapAnnotations()
-                        } catch {
-                            print("Could not connect to server!")
-                            return
-                        }
-                    }
+                    updatingPoints?.cancel()
+                    updatingPoints = locationManager.startUpdatingAnnotations()
                 }) {
                     Image(systemName: "arrow.counterclockwise")
                 }.buttonStyle(
@@ -94,17 +82,26 @@ struct MapView: View {
                     ))
                 
                 // Add point button
-                NavigationLink(destination: AddPointView(settingsManager: settingsManager, locationManager: locationManager), label: {
+                Button(action: {
+                    updatingPoints?.cancel()
+                    showAddPointView.toggle()
+                }) {
                     Image(systemName: "plus")
-                })
-                    .buttonStyle(
-                        CircleButton(
-                            foregroundColor: .white,
-                            backgroundColor: .red,
-                            radius: 120,
-                            fontSize: 72,
-                            fontWeight: .regular
-                        ))
+                }.buttonStyle(
+                    CircleButton(
+                        foregroundColor: .white,
+                        backgroundColor: .red,
+                        radius: 120,
+                        fontSize: 72,
+                        fontWeight: .regular
+                    ))
+                    .sheet(isPresented: $showAddPointView, onDismiss: {
+                        updatingPoints = locationManager.startUpdatingAnnotations()
+                    }) {
+                        if let location = locationManager.currentLocation {
+                            AddPointView(isPresented: $showAddPointView, location: location, settingsManager: settingsManager)
+                        }
+                    }
             }.offset(
                 x: -(UIScreen.main.bounds.width / 16),
                 y: -(UIScreen.main.bounds.width / 8)

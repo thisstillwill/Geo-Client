@@ -20,7 +20,6 @@ struct AddPointState {
 final class AddPointViewModel: ObservableObject {
     
     @ObservedObject var settingsManager: SettingsManager
-    @ObservedObject var locationManager: LocationManager
     @Published var state: AddPointState
     @Published var title: String = "" {
         didSet {
@@ -48,29 +47,23 @@ final class AddPointViewModel: ObservableObject {
             }
         }
     }
+    let location: CLLocationCoordinate2D
     
-    init(settingsManager: SettingsManager, locationManager: LocationManager) {
+    init(location: CLLocationCoordinate2D, settingsManager: SettingsManager) {
+        self.location = location
         self.settingsManager = settingsManager
-        self.locationManager = locationManager
         self.state = AddPointState()
     }
     
-    func isValid() -> Bool {
+    private func isValid() -> Bool {
         return !title.isEmpty && !description.isEmpty
     }
     
-    func submitForm() async throws {
+    public func submitForm() async throws {
         guard isValid() else {
             state.showAlert = true
             state.alertTitle = "Submission error!"
             state.alertMessage = "One or more form values are missing."
-            return
-        }
-        
-        guard let location = locationManager.currentLocation else {
-            state.showAlert = true
-            state.alertTitle = "Location error!"
-            state.alertMessage = "There was a problem getting your current location."
             return
         }
         

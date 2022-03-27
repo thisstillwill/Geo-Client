@@ -11,22 +11,32 @@ import CoreLocation
 
 struct AddPointView: View {
     
+    @EnvironmentObject var settingsManager: SettingsManager
     @ObservedObject var viewModel: AddPointViewModel
-    @State var returnToMap = false
+    @Binding var isPresented: Bool
     
-    init (settingsManager: SettingsManager, locationManager: LocationManager) {
-        self.viewModel = AddPointViewModel(settingsManager: settingsManager, locationManager: locationManager)
+    init (isPresented: Binding<Bool>, location: CLLocationCoordinate2D, settingsManager: SettingsManager) {
+        print("Refresh!!!")
+        self.viewModel = AddPointViewModel(location: location, settingsManager: settingsManager)
+        self._isPresented = isPresented
     }
     
     var body: some View {
-        if (!returnToMap) {
+        
+        NavigationView {
             Form(content: {
                 
                 // Point information fields
-                Section(header: Text("Title and Description")) {
+                Section(header: Text("Title")) {
                     TextEditor(text: $viewModel.title)
+                        .frame(minHeight: 60)
+                    
+                    ProgressView("\(viewModel.title.count)/\(settingsManager.maxTitleLength)", value: Double(viewModel.title.count), total: Double(settingsManager.maxTitleLength))
+                }
+                Section(header: Text("Description")) {
                     TextEditor(text: $viewModel.description)
-                        .frame(minHeight: 200, maxHeight: 200)
+                        .frame(minHeight: 240)
+                    ProgressView("\(viewModel.description.count)/\(settingsManager.maxDescriptionLength)", value: Double(viewModel.description.count), total: Double(settingsManager.maxDescriptionLength))
                 }
                 
                 // Submit button
@@ -36,11 +46,12 @@ struct AddPointView: View {
                             do {
                                 try await viewModel.submitForm()
                                 if (viewModel.state.hasSubmitted) {
-                                    self.returnToMap = true
+                                    isPresented = false
                                 }
                             } catch {
-                                print("Could not submit point to server!")
-                                return
+                                viewModel.state.showAlert = true
+                                viewModel.state.alertTitle = "Submission error!"
+                                viewModel.state.alertMessage = "Unable to connect to the server."
                             }
                         }
                     }) {
@@ -58,20 +69,27 @@ struct AddPointView: View {
                 }
             })
                 .navigationTitle("Add Point")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .destructiveAction) {
+                        Button("Cancel") {
+                            isPresented = false
+                        }
+                        .foregroundColor(.red)
+                    }
+                }
                 .alert(isPresented: $viewModel.state.showAlert) {
                     Alert(
                         title: Text(viewModel.state.alertTitle),
                         message: Text(viewModel.state.alertMessage)
                     )
                 }
-        } else {
-            MapView()
         }
     }
 }
 
 struct AddPointView_Previews: PreviewProvider {
     static var previews: some View {
-        AddPointView(settingsManager: SettingsManager(), locationManager: LocationManager(settingsManager: SettingsManager()))
+        AddPointView(isPresented: .constant(true), location: CLLocationCoordinate2D(latitude: 0.000, longitude: 0.000), settingsManager: SettingsManager()).environmentObject(SettingsManager())
     }
 }
