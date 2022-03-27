@@ -23,7 +23,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         center: MapDetails.defaultLocation,
         span: MapDetails.defaultSpan
     )
-    @Published var trackingMode: MapUserTrackingMode = .follow
+    @Published var trackingMode: MapUserTrackingMode = .none
     @Published var annotations: [Point] = []
     @Published var followingUser = true
     @Published var showAlert = false
@@ -55,7 +55,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             print("You have denied this app location permission.")
         case .authorizedAlways, .authorizedWhenInUse:
             region = MKCoordinateRegion(center: locationManager.location?.coordinate ?? MapDetails.defaultLocation, span: MapDetails.defaultSpan)
-            trackingMode = .follow
+            trackingMode = .none
         @unknown default:
             break
         }

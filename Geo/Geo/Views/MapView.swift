@@ -44,6 +44,11 @@ struct MapView: View {
             }
             .onAppear {
                 updatingPoints = locationManager.startUpdatingAnnotations()
+                
+//                // DEBUGGING
+//                Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: {_ in
+//                    print("Following user: \(locationManager.followingUser)")
+//                })
             }
             .onDisappear {
                 updatingPoints?.cancel()
