@@ -66,11 +66,14 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
     
     public func resetRegion() {
-        self.followingUser = true
         guard let currentLocation = self.currentLocation else {
+            showAlert = true
+            alertTitle = "Application error!"
+            alertMessage = "Unable to find your current location."
             return
         }
         self.region = MKCoordinateRegion(center: currentLocation, span: MapDetails.defaultSpan)
+        self.followingUser = true
     }
     
     internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
