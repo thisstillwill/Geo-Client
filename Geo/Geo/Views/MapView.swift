@@ -106,6 +106,11 @@ struct MapView: View {
                 x: -(UIScreen.main.bounds.width / 16),
                 y: -(UIScreen.main.bounds.width / 8)
             )
+        }.alert(isPresented: $locationManager.showAlert) {
+            Alert(
+                title: Text(locationManager.alertTitle),
+                message: Text(locationManager.alertMessage)
+            )
         }
     }
 }

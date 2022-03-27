@@ -26,6 +26,9 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     @Published var trackingMode: MapUserTrackingMode = .follow
     @Published var annotations: [Point] = []
     @Published var followingUser = true
+    @Published var showAlert = false
+    @Published var alertTitle: String = "Error!"
+    @Published var alertMessage: String = "An error has occurred."
     
     private let locationManager = CLLocationManager()
     
@@ -110,7 +113,13 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
                 while true {
                     // Explicitly check for cancellation request
                     try Task.checkCancellation()
-                    try await getMapAnnotations()
+                    do {
+                        try await getMapAnnotations()
+                    } catch {
+                        showAlert = true
+                        alertTitle = "Server error!"
+                        alertMessage = "Unable to refresh points from server."
+                    }
                     try await Task.sleep(nanoseconds: settingsManager.mapRefreshDelay)
                 }
             } catch {
