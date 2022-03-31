@@ -6,24 +6,48 @@
 //  Copyright © 2021 William Svoboda. All rights reserved.
 //
 
+import AuthenticationServices
 import SwiftUI
 
 struct ContentView: View {
     
+    @EnvironmentObject var loginManager: LoginManager
+    
+    // TODO: Refactor to adapt colorscheme on change?
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         NavigationView {
-            NavigationLink(destination: MapView(), label: {
-                Text("Enter")
-            })
-                .buttonStyle(
-                    CircleButton(
-                        foregroundColor: .white,
-                        backgroundColor: .red,
-                        radius: 200,
-                        fontSize: 50,
-                        fontWeight: .semibold
-                    ))
-                .navigationTitle("Welcome")
+            VStack {
+                SignInWithAppleButton(.signIn) { request in
+                    
+                    request.requestedScopes = [.email, .fullName]
+                    
+                } onCompletion: { result in
+                    
+                    switch result {
+                    case .success(let auth):
+                        print("Signed in!")
+                        switch auth.credential {
+                        case let appleIDCredential as ASAuthorizationAppleIDCredential:
+                            loginManager.handleCredential(appleIDCredential: appleIDCredential)
+                            print("Submitted to server")
+                        default:
+                            break
+                        }
+                    case .failure(let error):
+                        print(error)
+                    }
+                    
+                }
+                .signInWithAppleButtonStyle(
+                    colorScheme == .dark ? .white : .black
+                )
+                .frame(height: 50)
+                .padding()
+                .cornerRadius(8)
+            }
+            .navigationTitle("Sign In")
         }
     }
 }

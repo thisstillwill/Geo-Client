@@ -12,10 +12,12 @@ import SwiftUI
 struct Geo: App {
     
     let settingsManager: SettingsManager
+    let loginManager: LoginManager
     let locationManager: LocationManager
     
     init() {
         settingsManager = SettingsManager()
+        loginManager = LoginManager(settingsManager: settingsManager)
         locationManager = LocationManager(settingsManager: settingsManager)
     }
     
@@ -23,6 +25,7 @@ struct Geo: App {
         WindowGroup {
             ContentView()
                 .environmentObject(settingsManager)
+                .environmentObject(loginManager)
                 .environmentObject(locationManager)
         }
     }

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4A11D19B27750048009DCC65 /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11D19A27750048009DCC65 /* Point.swift */; };
+		4A1C29D227F3CACB003203B2 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1C29D127F3CACB003203B2 /* User.swift */; };
+		4A1C29D427F3CBCD003203B2 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1C29D327F3CBCD003203B2 /* LoginManager.swift */; };
 		4A25833327B07CBE008047CE /* PointAnnotationDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A25833227B07CBE008047CE /* PointAnnotationDetailsView.swift */; };
 		4A35255B27A0E1180093C847 /* AddPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A35255A27A0E1180093C847 /* AddPointView.swift */; };
 		4A35255E27A0E8D50093C847 /* AddPointViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A35255D27A0E8D50093C847 /* AddPointViewModel.swift */; };
@@ -25,6 +27,8 @@
 
 /* Begin PBXFileReference section */
 		4A11D19A27750048009DCC65 /* Point.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
+		4A1C29D127F3CACB003203B2 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		4A1C29D327F3CBCD003203B2 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
 		4A25833227B07CBE008047CE /* PointAnnotationDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointAnnotationDetailsView.swift; sourceTree = "<group>"; };
 		4A35255A27A0E1180093C847 /* AddPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPointView.swift; sourceTree = "<group>"; };
 		4A35255D27A0E8D50093C847 /* AddPointViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPointViewModel.swift; sourceTree = "<group>"; };
@@ -39,6 +43,8 @@
 		4A7B06A827E8CA240056F301 /* CircleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
 		4ABC62A12730E57B001AA1CD /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		4AC6292D273CDE5500E003FE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		4AEB472027F3814F00C5B9FE /* Geo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Geo.entitlements; sourceTree = "<group>"; };
+		4AEB472127F3828B00C5B9FE /* GeoRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GeoRelease.entitlements; sourceTree = "<group>"; };
 		4AF1509827E7AAA300960AE7 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -57,6 +63,7 @@
 			isa = PBXGroup;
 			children = (
 				4A11D19A27750048009DCC65 /* Point.swift */,
+				4A1C29D127F3CACB003203B2 /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -102,6 +109,8 @@
 		4A4F061F27235D8400497A25 /* Geo */ = {
 			isa = PBXGroup;
 			children = (
+				4AEB472127F3828B00C5B9FE /* GeoRelease.entitlements */,
+				4AEB472027F3814F00C5B9FE /* Geo.entitlements */,
 				4AF1509727E7A29900960AE7 /* Managers */,
 				4A11D1992774FFF2009DCC65 /* Models */,
 				4A40AABA2742B7C0007BA2F4 /* Views */,
@@ -127,6 +136,7 @@
 			children = (
 				4AC6292D273CDE5500E003FE /* LocationManager.swift */,
 				4AF1509827E7AAA300960AE7 /* SettingsManager.swift */,
+				4A1C29D327F3CBCD003203B2 /* LoginManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -207,9 +217,11 @@
 				4A35255E27A0E8D50093C847 /* AddPointViewModel.swift in Sources */,
 				4A61DA2D278F309B00D3D4EE /* PointAnnotationView.swift in Sources */,
 				4A7B06A927E8CA240056F301 /* CircleButton.swift in Sources */,
+				4A1C29D427F3CBCD003203B2 /* LoginManager.swift in Sources */,
 				4A35255B27A0E1180093C847 /* AddPointView.swift in Sources */,
 				4A11D19B27750048009DCC65 /* Point.swift in Sources */,
 				4AC6292E273CDE5500E003FE /* LocationManager.swift in Sources */,
+				4A1C29D227F3CACB003203B2 /* User.swift in Sources */,
 				4A25833327B07CBE008047CE /* PointAnnotationDetailsView.swift in Sources */,
 				4AF1509927E7AAA300960AE7 /* SettingsManager.swift in Sources */,
 				4A40AABE2742C6C9007BA2F4 /* Geo.swift in Sources */,
@@ -281,7 +293,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -336,7 +348,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -350,6 +362,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Geo/Geo.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Geo/Preview Content\"";
 				DEVELOPMENT_TEAM = CW4C3JKWPR;
@@ -362,6 +376,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.williamsvoboda.Geo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -371,6 +386,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Geo/GeoRelease.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Geo/Preview Content\"";
 				DEVELOPMENT_TEAM = CW4C3JKWPR;
@@ -383,6 +400,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.williamsvoboda.Geo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
