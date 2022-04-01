@@ -56,7 +56,7 @@ final class LoginManager: ObservableObject {
         components.port = settingsManager.port
         components.path = "/auth"
         
-        var request = URLRequest(url: URL(string: "http://Williams-MacBook-Pro.local:6379/auth")!)
+        var request = URLRequest(url: URL(string: "http://Williams-MacBook-Pro.local:6379/users")!)
         request.httpMethod = "POST"
         
         request.httpBody = encodedUser
