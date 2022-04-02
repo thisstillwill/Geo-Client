@@ -14,9 +14,8 @@ final class LoginManager: ObservableObject {
     
     @ObservedObject var settingsManager: SettingsManager
     @Published var currentUser: User?
+    @Published var identityToken: String?
     @Published var isLoggedIn = false
-    
-    private var identityToken: String?
     
     private final let keychainHelper = KeychainHelper()
     
@@ -25,15 +24,20 @@ final class LoginManager: ObservableObject {
     }
     
     public func handleCredential(appleIDCredential: ASAuthorizationAppleIDCredential) {
-        // First time signing in
+        // New user
         if let _ = appleIDCredential.email, let _ = appleIDCredential.fullName {
             do {
                 try signUp(appleIDCredential: appleIDCredential)
             } catch {
-                print(error)
+                print("Failed to sign up!")
             }
         } else {
-            signIn(appleIDCredential: appleIDCredential)
+            // Returning user
+            do {
+                try signIn(appleIDCredential: appleIDCredential)
+            } catch {
+                print("Failed to sign in")
+            }
         }
     }
     
@@ -43,20 +47,20 @@ final class LoginManager: ObservableObject {
                            email: appleIDCredential.email!,
                            givenName: appleIDCredential.fullName?.givenName ?? "",
                            familyName: appleIDCredential.fullName?.familyName ?? "")
-        cacheUserDetails(user: currentUser!)
+        keychainHelper.save(currentUser!, service: "user", account: "geo")
         
-        self.identityToken = String(data: appleIDCredential.identityToken!, encoding: .utf8)
+        let identityToken = String(data: appleIDCredential.identityToken!, encoding: .utf8)
         
-        // Submit user data to server
+        // Submit credentials and user data to server
         let encodedUser = try JSONEncoder().encode(currentUser)
         
         var components = URLComponents()
         components.scheme = settingsManager.scheme
         components.host = settingsManager.host
         components.port = settingsManager.port
-        components.path = "/auth"
+        components.path = "/users"
         
-        var request = URLRequest(url: URL(string: "http://Williams-MacBook-Pro.local:6379/users")!)
+        var request = URLRequest(url: components.url!)
         request.httpMethod = "POST"
         
         request.httpBody = encodedUser
@@ -74,15 +78,35 @@ final class LoginManager: ObservableObject {
         task.resume()
     }
     
-    private func signIn(appleIDCredential: ASAuthorizationAppleIDCredential) {
+    private func signIn(appleIDCredential: ASAuthorizationAppleIDCredential) throws {
         
-    }
-    
-    private func cacheUserDetails(user: User) {
-        keychainHelper.save(user.id, service: "user-id", account: "geo")
-        keychainHelper.save(user.email, service: "user-email", account: "geo")
-        keychainHelper.save(user.givenName, service: "user-given-name", account: "geo")
-        keychainHelper.save(user.familyName, service: "user-family-name", account: "geo")
+        // Submit credentials and user id to server
+        let identityToken = String(data: appleIDCredential.identityToken!, encoding: .utf8)
+        
+        let encodedId = try JSONEncoder().encode(["id": appleIDCredential.user])
+        
+        var components = URLComponents()
+        components.scheme = settingsManager.scheme
+        components.host = settingsManager.host
+        components.port = settingsManager.port
+        components.path = "/auth"
+        
+        var request = URLRequest(url: components.url!)
+        request.httpMethod = "POST"
+        
+        request.httpBody = encodedId
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(identityToken ?? "ERROR", forHTTPHeaderField: "Authorization")
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let _ = data, let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
+                print(error?.localizedDescription ?? "No data")
+                return
+            }
+        }
+        
+        task.resume()
     }
 }
 

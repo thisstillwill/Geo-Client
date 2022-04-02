@@ -12,7 +12,7 @@ import MapKit
 
 final class SettingsManager: ObservableObject {
     @Published var scheme: String = "http"
-    @Published var host: String = "localhost"
+    @Published var host: String = "Williams-MacBook-Pro.local"
     @Published var port: Int = 6379
     @Published var mapRefreshDelay: UInt64 = 5_000_000_000
     @Published var searchRadiusMeters: CLLocationDistance = 1600
