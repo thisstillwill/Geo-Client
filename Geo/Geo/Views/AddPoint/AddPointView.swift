@@ -20,12 +20,13 @@ struct AddPointView: View {
     }
     
     init (isPresented: Binding<Bool>, location: CLLocationCoordinate2D, settingsManager: SettingsManager) {
-        print("Refresh!!!")
         self.viewModel = AddPointViewModel(location: location, settingsManager: settingsManager)
         self._isPresented = isPresented
     }
     
     var body: some View {
+        
+        let _ = Self._printChanges()
         
         NavigationView {
             Form(content: {

@@ -14,7 +14,7 @@ final class LoginManager: ObservableObject {
     
     @ObservedObject var settingsManager: SettingsManager
     @Published var currentUser: User?
-    @Published var identityToken: String?
+    @Published var refreshToken: String?
     @Published var isLoggedIn = false
     
     private final let keychainHelper = KeychainHelper()
@@ -27,7 +27,8 @@ final class LoginManager: ObservableObject {
         // New user
         if let _ = appleIDCredential.email, let _ = appleIDCredential.fullName {
             do {
-                try signUp(appleIDCredential: appleIDCredential)
+                try signUp(appleIDCredential: appleIDCredential, restoringUser: false)
+                print(refreshToken ?? "No token found!")
             } catch {
                 print("Failed to sign up!")
             }
@@ -35,24 +36,30 @@ final class LoginManager: ObservableObject {
             // Returning user
             do {
                 try signIn(appleIDCredential: appleIDCredential)
+                print(refreshToken ?? "No token found!")
             } catch {
                 print("Failed to sign in")
             }
         }
     }
     
-    private func signUp(appleIDCredential: ASAuthorizationAppleIDCredential) throws {
+    private func signUp(appleIDCredential: ASAuthorizationAppleIDCredential, restoringUser: Bool) throws {
         // Set current user and save information to keychain
-        self.currentUser = User(id: appleIDCredential.user,
-                           email: appleIDCredential.email!,
-                           givenName: appleIDCredential.fullName?.givenName ?? "",
-                           familyName: appleIDCredential.fullName?.familyName ?? "")
-        keychainHelper.save(currentUser!, service: "user", account: "geo")
+        var user: User
+        if restoringUser {
+            user = keychainHelper.read(service: "user", account: "geo", type: User.self)!
+        } else {
+            user = User(id: appleIDCredential.user,
+                        email: appleIDCredential.email!,
+                        givenName: appleIDCredential.fullName?.givenName ?? "",
+                        familyName: appleIDCredential.fullName?.familyName ?? "")
+            keychainHelper.save(user, service: "user", account: "geo")
+        }
         
         let identityToken = String(data: appleIDCredential.identityToken!, encoding: .utf8)
         
         // Submit credentials and user data to server
-        let encodedUser = try JSONEncoder().encode(currentUser)
+        let encodedUser = try JSONEncoder().encode(user)
         
         var components = URLComponents()
         components.scheme = settingsManager.scheme
@@ -69,9 +76,23 @@ final class LoginManager: ObservableObject {
         request.setValue(identityToken ?? "ERROR", forHTTPHeaderField: "Authorization")
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let _ = data, let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
+            guard let data = data else {
                 print(error?.localizedDescription ?? "No data")
                 return
+            }
+            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
+                print(error?.localizedDescription ?? "No data")
+                return
+            }
+            do {
+                let refreshToken = try JSONDecoder().decode(TokenResponse.self, from: data)
+                self.keychainHelper.save(refreshToken.token, service: "refresh-token", account: "geo")
+                DispatchQueue.main.async {
+                    self.refreshToken = refreshToken.token
+                    self.isLoggedIn = true
+                }
+            } catch let error {
+                print(error)
             }
         }
         
@@ -100,14 +121,41 @@ final class LoginManager: ObservableObject {
         request.setValue(identityToken ?? "ERROR", forHTTPHeaderField: "Authorization")
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let _ = data, let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
+            guard let data = data else {
                 print(error?.localizedDescription ?? "No data")
                 return
             }
+            guard let response = response as? HTTPURLResponse else {
+                print(error?.localizedDescription ?? "No data")
+                return
+            }
+            guard (200...299).contains(response.statusCode) else {
+                if response.statusCode == 404 {
+                    do {
+                        print("Trying to sign up again!!!")
+                        try self.signUp(appleIDCredential: appleIDCredential, restoringUser: true)
+                    }
+                    catch {
+                        print("Weird error")
+                        return
+                    }
+                }
+                print("Unknown server error!")
+                return
+            }
+            do {
+                let refreshToken = try JSONDecoder().decode(TokenResponse.self, from: data)
+                self.keychainHelper.save(refreshToken.token, service: "refresh-token", account: "geo")
+                DispatchQueue.main.async {
+                    self.refreshToken = refreshToken.token
+                    self.isLoggedIn = true
+                }
+            } catch let error {
+                print(error)
+            }
         }
-        
-        task.resume()
-    }
+            task.resume()
+        }
 }
 
 private final class KeychainHelper {

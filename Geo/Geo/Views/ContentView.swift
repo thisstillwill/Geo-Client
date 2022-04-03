@@ -17,37 +17,41 @@ struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
-        NavigationView {
-            VStack {
-                SignInWithAppleButton(.signIn) { request in
-                    
-                    request.requestedScopes = [.email, .fullName]
-                    
-                } onCompletion: { result in
-                    
-                    switch result {
-                    case .success(let auth):
-                        print("Signed in!")
-                        switch auth.credential {
-                        case let appleIDCredential as ASAuthorizationAppleIDCredential:
-                            loginManager.handleCredential(appleIDCredential: appleIDCredential)
-                            print("Submitted to server")
-                        default:
-                            break
+        if (loginManager.isLoggedIn) {
+            MapView()
+        } else {
+            NavigationView {
+                VStack {
+                    SignInWithAppleButton(.signIn) { request in
+                        
+                        request.requestedScopes = [.email, .fullName]
+                        
+                    } onCompletion: { result in
+                        
+                        switch result {
+                        case .success(let auth):
+                            print("Signed in!")
+                            switch auth.credential {
+                            case let appleIDCredential as ASAuthorizationAppleIDCredential:
+                                loginManager.handleCredential(appleIDCredential: appleIDCredential)
+                                print("Submitted to server")
+                            default:
+                                break
+                            }
+                        case .failure(let error):
+                            print(error)
                         }
-                    case .failure(let error):
-                        print(error)
+                        
                     }
-                    
+                    .signInWithAppleButtonStyle(
+                        colorScheme == .dark ? .white : .black
+                    )
+                    .frame(height: 50)
+                    .padding()
+                    .cornerRadius(8)
                 }
-                .signInWithAppleButtonStyle(
-                    colorScheme == .dark ? .white : .black
-                )
-                .frame(height: 50)
-                .padding()
-                .cornerRadius(8)
+                .navigationTitle("Sign In")
             }
-            .navigationTitle("Sign In")
         }
     }
 }
