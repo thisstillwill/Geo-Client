@@ -44,6 +44,7 @@ struct MapView: View {
                     }
                 }
                 .onAppear {
+                    locationManager.startUpdatingLocation()
                     updatingPoints = locationManager.startUpdatingAnnotations()
                     
                     //                // DEBUGGING
@@ -52,6 +53,7 @@ struct MapView: View {
                     //                })
                 }
                 .onDisappear {
+                    locationManager.stopUpdatingLocation()
                     updatingPoints?.cancel()
                 }
                 
@@ -92,6 +94,7 @@ struct MapView: View {
                     Button(action: {
                         if locationManager.canAddPoint() {
                             updatingPoints?.cancel()
+                            locationManager.stopUpdatingLocation()
                             showAddPointView.toggle()
                         }
                     }) {
@@ -104,6 +107,7 @@ struct MapView: View {
                             fontSize: 72,
                             fontWeight: .regular
                         )).fullScreenCover(isPresented: $showAddPointView, onDismiss: {
+                            locationManager.startUpdatingLocation()
                             updatingPoints = locationManager.startUpdatingAnnotations()
                         }) {
                             if let location = locationManager.currentLocation {

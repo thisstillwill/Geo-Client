@@ -38,11 +38,6 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         self.locationManager.delegate = self
         self.locationManager.activityType = CLActivityType.other
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        if CLLocationManager.locationServicesEnabled() {
-            self.locationManager.startUpdatingLocation()
-        } else {
-            print("Location services is required to use this app.")
-        }
     }
     
     private func checkLocationAuthorized() {
@@ -63,6 +58,20 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     
     internal func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         checkLocationAuthorized()
+    }
+    
+    public func startUpdatingLocation() {
+        if CLLocationManager.locationServicesEnabled() {
+            print("Started updating location!")
+            self.locationManager.startUpdatingLocation()
+        } else {
+            print("Location services is required to use this app.")
+        }
+    }
+    
+    public func stopUpdatingLocation() {
+        print("Stopped updating location!")
+        self.locationManager.stopUpdatingLocation()
     }
     
     public func resetRegion() {
