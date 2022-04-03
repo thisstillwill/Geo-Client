@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		4A11D19B27750048009DCC65 /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11D19A27750048009DCC65 /* Point.swift */; };
 		4A1C29D227F3CACB003203B2 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1C29D127F3CACB003203B2 /* User.swift */; };
-		4A1C29D427F3CBCD003203B2 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1C29D327F3CBCD003203B2 /* LoginManager.swift */; };
+		4A1C29D427F3CBCD003203B2 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1C29D327F3CBCD003203B2 /* AuthenticationManager.swift */; };
 		4A25833327B07CBE008047CE /* PointAnnotationDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A25833227B07CBE008047CE /* PointAnnotationDetailsView.swift */; };
 		4A35255B27A0E1180093C847 /* AddPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A35255A27A0E1180093C847 /* AddPointView.swift */; };
 		4A35255E27A0E8D50093C847 /* AddPointViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A35255D27A0E8D50093C847 /* AddPointViewModel.swift */; };
@@ -29,7 +29,7 @@
 /* Begin PBXFileReference section */
 		4A11D19A27750048009DCC65 /* Point.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
 		4A1C29D127F3CACB003203B2 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		4A1C29D327F3CBCD003203B2 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
+		4A1C29D327F3CBCD003203B2 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
 		4A25833227B07CBE008047CE /* PointAnnotationDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointAnnotationDetailsView.swift; sourceTree = "<group>"; };
 		4A35255A27A0E1180093C847 /* AddPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPointView.swift; sourceTree = "<group>"; };
 		4A35255D27A0E8D50093C847 /* AddPointViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPointViewModel.swift; sourceTree = "<group>"; };
@@ -139,7 +139,7 @@
 			children = (
 				4AC6292D273CDE5500E003FE /* LocationManager.swift */,
 				4AF1509827E7AAA300960AE7 /* SettingsManager.swift */,
-				4A1C29D327F3CBCD003203B2 /* LoginManager.swift */,
+				4A1C29D327F3CBCD003203B2 /* AuthenticationManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -221,7 +221,7 @@
 				4A35255E27A0E8D50093C847 /* AddPointViewModel.swift in Sources */,
 				4A61DA2D278F309B00D3D4EE /* PointAnnotationView.swift in Sources */,
 				4A7B06A927E8CA240056F301 /* CircleButton.swift in Sources */,
-				4A1C29D427F3CBCD003203B2 /* LoginManager.swift in Sources */,
+				4A1C29D427F3CBCD003203B2 /* AuthenticationManager.swift in Sources */,
 				4A35255B27A0E1180093C847 /* AddPointView.swift in Sources */,
 				4A11D19B27750048009DCC65 /* Point.swift in Sources */,
 				4AC6292E273CDE5500E003FE /* LocationManager.swift in Sources */,

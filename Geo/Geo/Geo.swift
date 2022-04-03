@@ -12,12 +12,12 @@ import SwiftUI
 struct Geo: App {
     
     let settingsManager: SettingsManager
-    let loginManager: LoginManager
+    let loginManager: AuthenticationManager
     let locationManager: LocationManager
     
     init() {
         settingsManager = SettingsManager()
-        loginManager = LoginManager(settingsManager: settingsManager)
+        loginManager = AuthenticationManager(settingsManager: settingsManager)
         locationManager = LocationManager(settingsManager: settingsManager)
     }
     

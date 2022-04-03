@@ -11,13 +11,13 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @EnvironmentObject var loginManager: LoginManager
+    @EnvironmentObject var authenticationManager: AuthenticationManager
     
     // TODO: Refactor to adapt colorscheme on change?
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
-        if (loginManager.isLoggedIn) {
+        if (authenticationManager.isSignedIn) {
             MapView()
         } else {
             NavigationView {
@@ -33,7 +33,7 @@ struct ContentView: View {
                             print("Signed in!")
                             switch auth.credential {
                             case let appleIDCredential as ASAuthorizationAppleIDCredential:
-                                loginManager.handleCredential(appleIDCredential: appleIDCredential)
+                                authenticationManager.handleCredential(appleIDCredential: appleIDCredential)
                                 print("Submitted to server")
                             default:
                                 break

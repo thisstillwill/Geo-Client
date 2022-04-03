@@ -10,17 +10,22 @@ import Foundation
 import AuthenticationServices
 import SwiftUI
 
-final class LoginManager: ObservableObject {
+final class AuthenticationManager: ObservableObject {
     
     @ObservedObject var settingsManager: SettingsManager
     @Published var currentUser: User?
     @Published var refreshToken: String?
-    @Published var isLoggedIn = false
+    @Published var isSignedIn = false
     
     private final let keychainHelper = KeychainHelper()
     
     init(settingsManager: SettingsManager) {
         self.settingsManager = settingsManager
+        do {
+            try signIn()
+        } catch {
+            print("Unable to restore session!")
+        }
     }
     
     public func handleCredential(appleIDCredential: ASAuthorizationAppleIDCredential) {
@@ -89,10 +94,51 @@ final class LoginManager: ObservableObject {
                 self.keychainHelper.save(refreshToken.token, service: "refresh-token", account: "geo")
                 DispatchQueue.main.async {
                     self.refreshToken = refreshToken.token
-                    self.isLoggedIn = true
+                    self.isSignedIn = true
                 }
             } catch let error {
                 print(error)
+            }
+        }
+        
+        task.resume()
+    }
+    
+    private func signIn() throws {
+        guard let refreshToken = keychainHelper.read(service: "refresh-token", account: "geo", type: String.self) else {
+            self.isSignedIn = false
+            print("Refresh token not found, reverting to manual authentication")
+            return
+        }
+        
+        guard let user = keychainHelper.read(service: "user", account: "geo", type: User.self) else {
+            self.isSignedIn = false
+            print("User info not found, reverting to manual authentication")
+            return
+        }
+        
+        let encodedId = try JSONEncoder().encode(["id": user.id])
+        
+        var components = URLComponents()
+        components.scheme = settingsManager.scheme
+        components.host = settingsManager.host
+        components.port = settingsManager.port
+        components.path = "/session"
+        
+        var request = URLRequest(url: components.url!)
+        request.httpMethod = "POST"
+        
+        request.httpBody = encodedId
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(refreshToken, forHTTPHeaderField: "Authorization")
+        
+        let task = URLSession.shared.dataTask(with: request) { _, response, error in
+            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
+                print("Error connecting to server")
+                return
+            }
+            DispatchQueue.main.async {
+                self.isSignedIn = true
             }
         }
         
@@ -148,7 +194,7 @@ final class LoginManager: ObservableObject {
                 self.keychainHelper.save(refreshToken.token, service: "refresh-token", account: "geo")
                 DispatchQueue.main.async {
                     self.refreshToken = refreshToken.token
-                    self.isLoggedIn = true
+                    self.isSignedIn = true
                 }
             } catch let error {
                 print(error)
