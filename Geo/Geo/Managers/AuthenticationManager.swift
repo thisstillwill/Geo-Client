@@ -42,7 +42,6 @@ final class AuthenticationManager: ObservableObject {
                         familyName: appleIDCredential.fullName?.familyName ?? "")
             keychainHelper.save(user, service: "user", account: "geo")
         }
-        self.currentUser = user
         
         // Prepare API request
         guard let identityToken = appleIDCredential.identityToken else { throw AuthenticationError.missingCredentials }
@@ -67,33 +66,11 @@ final class AuthenticationManager: ObservableObject {
             throw AuthenticationError.invalidCredentials
         }
         
+        self.currentUser = user
         DispatchQueue.main.async {
             self.isSignedIn = true
             self.refreshToken = refreshToken.token
         }
-        
-//        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-//            guard let data = data else {
-//                print(error?.localizedDescription ?? "No data")
-//                return
-//            }
-//            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
-//                print(error?.localizedDescription ?? "No data")
-//                return
-//            }
-//            do {
-//                let refreshToken = try JSONDecoder().decode(TokenResponse.self, from: data)
-//                self.keychainHelper.save(refreshToken.token, service: "refresh-token", account: "geo")
-//                DispatchQueue.main.async {
-//                    self.refreshToken = refreshToken.token
-//                    self.isSignedIn = true
-//                }
-//            } catch let error {
-//                print(error)
-//            }
-//        }
-//
-//        task.resume()
     }
     
     // Attempt to restore an existing authentication session
@@ -132,11 +109,10 @@ final class AuthenticationManager: ObservableObject {
     }
     
     // Sign in a returning user
-    func signIn(appleIDCredential: ASAuthorizationAppleIDCredential) throws {
+    func signIn(appleIDCredential: ASAuthorizationAppleIDCredential) async throws {
         // Prepare API request
-        guard let identityToken = String(data: appleIDCredential.identityToken!, encoding: .utf8) else {
-            throw AuthenticationError.invalidCredentials
-        }
+        guard let identityToken = appleIDCredential.identityToken else { throw AuthenticationError.missingCredentials }
+        let identityTokenString = String(data: identityToken, encoding: .utf8)
         let encodedId = try JSONEncoder().encode(["id": appleIDCredential.user])
         var components = URLComponents()
         components.scheme = settingsManager.scheme
@@ -148,48 +124,29 @@ final class AuthenticationManager: ObservableObject {
         request.httpBody = encodedId
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue(identityToken, forHTTPHeaderField: "Authorization")
+        request.setValue(identityTokenString, forHTTPHeaderField: "Authorization")
         
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data else {
-                print(error?.localizedDescription ?? "No data")
+        // Submit request to server and validate response
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let response = response as? HTTPURLResponse else {
+            throw AuthenticationError.badResponse
+        }
+        guard (200...299).contains(response.statusCode) else {
+            // If user not found, retry the sign-up process
+            if response.statusCode == 404 {
+                try await signUp(appleIDCredential: appleIDCredential, restoringUser: true)
                 return
-            }
-            guard let response = response as? HTTPURLResponse else {
-                print(error?.localizedDescription ?? "No data")
-                return
-            }
-            guard (200...299).contains(response.statusCode) else {
-                if response.statusCode == 404 {
-                    
-                        print("Trying to sign up again!!!")
-                        Task {
-                            do {
-                                try await self.signUp(appleIDCredential: appleIDCredential, restoringUser: true)
-                            } catch {
-                                print("Weird error")
-                                return
-                            }
-                        }
-                    
-                    
-                }
-                print("Unknown server error!")
-                return
-            }
-            do {
-                let refreshToken = try JSONDecoder().decode(TokenResponse.self, from: data)
-                self.keychainHelper.save(refreshToken.token, service: "refresh-token", account: "geo")
-                DispatchQueue.main.async {
-                    self.refreshToken = refreshToken.token
-                    self.isSignedIn = true
-                }
-            } catch let error {
-                print(error)
+            } else {
+                throw AuthenticationError.badResponse
             }
         }
-            task.resume()
+        let refreshToken = try JSONDecoder().decode(TokenResponse.self, from: data)
+        
+        DispatchQueue.main.async {
+            self.isSignedIn = true
+            self.refreshToken = refreshToken.token
         }
+    }
 }
 
 private final class KeychainHelper {
