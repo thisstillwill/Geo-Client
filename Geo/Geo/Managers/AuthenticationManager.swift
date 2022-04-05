@@ -75,6 +75,7 @@ final class AuthenticationManager: ObservableObject {
     
     // Attempt to restore an existing authentication session
     func signIn() async throws {
+        print("Attempting to automatically sign in")
         // Retrieve credentials from keychain
         guard let refreshToken = keychainHelper.read(service: "refresh-token", account: "geo", type: String.self) else {
             throw AuthenticationError.missingCredentials
@@ -102,6 +103,7 @@ final class AuthenticationManager: ObservableObject {
             throw AuthenticationError.invalidCredentials
         }
         let currentUser = try JSONDecoder().decode(User.self, from: data)
+        print("Got here!")
         
         DispatchQueue.main.async {
             self.isSignedIn = true

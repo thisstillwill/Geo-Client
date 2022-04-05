@@ -26,7 +26,7 @@ struct AddPointView: View {
     
     var body: some View {
         
-        let _ = Self._printChanges()
+//        let _ = Self._printChanges()
         
         NavigationView {
             Form(content: {
