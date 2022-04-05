@@ -13,45 +13,11 @@ struct ContentView: View {
     
     @EnvironmentObject var authenticationManager: AuthenticationManager
     
-    // TODO: Refactor to adapt colorscheme on change?
-    @Environment(\.colorScheme) var colorScheme
-    
     var body: some View {
         if (authenticationManager.isSignedIn) {
             MapView()
         } else {
-            NavigationView {
-                VStack {
-                    SignInWithAppleButton(.signIn) { request in
-                        
-                        request.requestedScopes = [.email, .fullName]
-                        
-                    } onCompletion: { result in
-                        
-                        switch result {
-                        case .success(let auth):
-                            print("Signed in!")
-                            switch auth.credential {
-                            case let appleIDCredential as ASAuthorizationAppleIDCredential:
-                                authenticationManager.handleCredential(appleIDCredential: appleIDCredential)
-                                print("Submitted to server")
-                            default:
-                                break
-                            }
-                        case .failure(let error):
-                            print(error)
-                        }
-                        
-                    }
-                    .signInWithAppleButtonStyle(
-                        colorScheme == .dark ? .white : .black
-                    )
-                    .frame(height: 50)
-                    .padding()
-                    .cornerRadius(8)
-                }
-                .navigationTitle("Sign In")
-            }
+            LoginView(viewModel: LoginViewModel(authenticationManager: authenticationManager))
         }
     }
 }
