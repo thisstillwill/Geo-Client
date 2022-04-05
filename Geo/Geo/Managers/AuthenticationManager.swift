@@ -97,14 +97,15 @@ final class AuthenticationManager: ObservableObject {
         request.setValue(refreshToken, forHTTPHeaderField: "Authorization")
         
         // Submit request to server and validate response
-        let (_, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await URLSession.shared.data(for: request)
         guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
             throw AuthenticationError.invalidCredentials
         }
+        let currentUser = try JSONDecoder().decode(User.self, from: data)
         
         DispatchQueue.main.async {
             self.isSignedIn = true
-            self.currentUser = user
+            self.currentUser = currentUser
         }
     }
     
@@ -140,11 +141,12 @@ final class AuthenticationManager: ObservableObject {
                 throw AuthenticationError.badResponse
             }
         }
-        let refreshToken = try JSONDecoder().decode(TokenResponse.self, from: data)
+        let signInResponse = try JSONDecoder().decode(SignInResponse.self, from: data)
         
         DispatchQueue.main.async {
             self.isSignedIn = true
-            self.refreshToken = refreshToken.token
+            self.refreshToken = signInResponse.token.token
+            self.currentUser = signInResponse.user
         }
     }
 }

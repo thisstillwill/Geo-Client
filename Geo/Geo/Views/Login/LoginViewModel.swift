@@ -45,7 +45,6 @@ final class LoginViewModel: ObservableObject {
             // Returning user
             Task {
                 do {
-                    print("Signing in!")
                     try await authenticationManager.signIn(appleIDCredential: appleIDCredential)
                 } catch {
                     print(error)
