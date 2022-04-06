@@ -61,10 +61,6 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         checkLocationAuthorized()
     }
     
-    func canInteract(otherLocation: CLLocationCoordinate2D) -> Bool {
-        return (currentLocation?.distance(from: otherLocation) ?? Double.infinity) < settingsManager.interactRadiusMeters
-    }
-    
     func getCurrentLocation() throws -> CLLocationCoordinate2D {
         guard let currentLocation = currentLocation else { throw LocationError.locationMissing }
         return currentLocation

@@ -33,9 +33,7 @@ struct MapView: View {
                     annotationItems: viewModel.pointAnnotations
                 ) {
                     point in MapAnnotation(coordinate: point.location) {
-                        PointAnnotationView(point: point)
-                            .environmentObject(settingsManager)
-                            .environmentObject(locationManager)
+                        PointAnnotationView(viewModel: PointAnnotationViewModel(settingsManager: settingsManager, locationManager: locationManager), point: point)
                     }
                 }
                 .ignoresSafeArea()

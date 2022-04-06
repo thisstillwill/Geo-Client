@@ -11,24 +11,22 @@ import MapKit
 
 struct PointAnnotationView: View {
     
-    @EnvironmentObject var settingsManager: SettingsManager
-    @EnvironmentObject var locationManager: LocationManager
-    @State var showPointDetailsView = false
+    @StateObject var viewModel: PointAnnotationViewModel
     
     let point: Point
     
     var body: some View {
-        if (locationManager.canInteract(otherLocation: point.location)) {
+        if (viewModel.canInteract(otherLocation: point.location)) {
             Button(action: {
-                showPointDetailsView = true
+                viewModel.showPointDetailsView.toggle()
             }) {
-                PointAnnotationIconView(accent: .red)
+                PointAnnotationIconView(accent: viewModel.inRangeColor)
             }
-            .sheet(isPresented: $showPointDetailsView) {
-                PointAnnotationDetailsView(isPresented: $showPointDetailsView, point: point)
+            .sheet(isPresented: $viewModel.showPointDetailsView) {
+                PointAnnotationDetailsView(isPresented: $viewModel.showPointDetailsView, point: point)
             }
         } else {
-            PointAnnotationIconView(accent: settingsManager.notInRangeColor)
+            PointAnnotationIconView(accent: viewModel.notInRangeColor)
         }
     }
 }
@@ -53,8 +51,6 @@ struct PointAnnotationIconView: View {
 
 struct PointAnnotationView_Previews: PreviewProvider {
     static var previews: some View {
-        PointAnnotationView(point: TestPoints.lot19)
-            .environmentObject(SettingsManager())
-            .environmentObject(LocationManager(settingsManager: SettingsManager()))
+        PointAnnotationView(viewModel: PointAnnotationViewModel(settingsManager: SettingsManager(), locationManager: LocationManager(settingsManager: SettingsManager())), point: TestPoints.lot19)
     }
 }

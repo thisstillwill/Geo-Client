@@ -13,6 +13,7 @@ import SwiftUI
 final class AddPointViewModel: ObservableObject {
     // Injected dependencies
     @ObservedObject var settingsManager: SettingsManager
+    
     @Binding var isPresented: Bool
     @Published var maxTitleLength: Int
     @Published var maxDescriptionLength: Int

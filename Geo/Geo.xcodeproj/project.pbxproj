@@ -27,6 +27,7 @@
 		4AD705C427FB52300065321B /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD705C327FB52300065321B /* LoginViewModel.swift */; };
 		4AD705C827FBCFA60065321B /* SignInResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD705C727FBCFA60065321B /* SignInResponse.swift */; };
 		4AD705CB27FBD9830065321B /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD705CA27FBD9830065321B /* MapViewModel.swift */; };
+		4AE0D7D627FE19F0000A359C /* PointAnnotationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE0D7D527FE19F0000A359C /* PointAnnotationViewModel.swift */; };
 		4AF1509927E7AAA300960AE7 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF1509827E7AAA300960AE7 /* SettingsManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +54,7 @@
 		4AD705C327FB52300065321B /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		4AD705C727FBCFA60065321B /* SignInResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInResponse.swift; sourceTree = "<group>"; };
 		4AD705CA27FBD9830065321B /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
+		4AE0D7D527FE19F0000A359C /* PointAnnotationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointAnnotationViewModel.swift; sourceTree = "<group>"; };
 		4AEB472027F3814F00C5B9FE /* Geo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Geo.entitlements; sourceTree = "<group>"; };
 		4AEB472127F3828B00C5B9FE /* GeoRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GeoRelease.entitlements; sourceTree = "<group>"; };
 		4AF1509827E7AAA300960AE7 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
@@ -96,8 +98,7 @@
 				4AD705C927FBD6E70065321B /* Map */,
 				4A35255F27A0E9140093C847 /* AddPoint */,
 				4A4F062427235D8400497A25 /* ContentView.swift */,
-				4A61DA2C278F309B00D3D4EE /* PointAnnotationView.swift */,
-				4A25833227B07CBE008047CE /* PointAnnotationDetailsView.swift */,
+				4AE0D7D427FE14B7000A359C /* PointAnnotation */,
 				4A7B06A827E8CA240056F301 /* CircleButton.swift */,
 			);
 			path = Views;
@@ -160,6 +161,16 @@
 				4AD705CA27FBD9830065321B /* MapViewModel.swift */,
 			);
 			path = Map;
+			sourceTree = "<group>";
+		};
+		4AE0D7D427FE14B7000A359C /* PointAnnotation */ = {
+			isa = PBXGroup;
+			children = (
+				4A61DA2C278F309B00D3D4EE /* PointAnnotationView.swift */,
+				4A25833227B07CBE008047CE /* PointAnnotationDetailsView.swift */,
+				4AE0D7D527FE19F0000A359C /* PointAnnotationViewModel.swift */,
+			);
+			path = PointAnnotation;
 			sourceTree = "<group>";
 		};
 		4AF1509727E7A29900960AE7 /* Managers */ = {
@@ -255,6 +266,7 @@
 				4A1C29D427F3CBCD003203B2 /* AuthenticationManager.swift in Sources */,
 				4A35255B27A0E1180093C847 /* AddPointView.swift in Sources */,
 				4AD705CB27FBD9830065321B /* MapViewModel.swift in Sources */,
+				4AE0D7D627FE19F0000A359C /* PointAnnotationViewModel.swift in Sources */,
 				4A11D19B27750048009DCC65 /* Point.swift in Sources */,
 				4AC6292E273CDE5500E003FE /* LocationManager.swift in Sources */,
 				4A1C29D227F3CACB003203B2 /* User.swift in Sources */,
