@@ -12,13 +12,15 @@ import CoreLocation
 // A Point represents a single unique point of interest on the map
 struct Point: Identifiable, Codable {
     let id: String? // TODO: Server generates a UUID?
+    let poster: String
     let title: String
     let body: String
     let location: CLLocationCoordinate2D
     
     // Overloaded init for testing and server upload
-    init(id: String, title: String, body: String, location: CLLocationCoordinate2D) {
+    init(id: String, poster: String, title: String, body: String, location: CLLocationCoordinate2D) {
         self.id = id
+        self.poster = poster
         self.title = title
         self.body = body
         self.location = location
@@ -28,6 +30,7 @@ struct Point: Identifiable, Codable {
     // Adapted from https://medium.com/@nictheawesome/using-codable-with-nested-json-is-both-easy-and-fun-19375246c9ff
     enum CodingKeys: String, CodingKey {
         case id = "id"
+        case poster = "poster"
         case title = "title"
         case body = "body"
         case latitude = "latitude"
@@ -36,6 +39,7 @@ struct Point: Identifiable, Codable {
     init(from decoder: Decoder) throws {
         let response = try decoder.container(keyedBy: CodingKeys.self)
         id = try response.decode(String.self, forKey: .id)
+        poster = try response.decode(String.self, forKey: .poster)
         title = try response.decode(String.self, forKey: .title)
         body = try response.decode(String.self, forKey: .body)
         let latitude = try response.decode(Double.self, forKey: .latitude)
@@ -45,6 +49,7 @@ struct Point: Identifiable, Codable {
     func encode(to encoder: Encoder) throws {
         var response = encoder.container(keyedBy: CodingKeys.self)
         try response.encode(id, forKey: .id)
+        try response.encode(poster, forKey: .poster)
         try response.encode(title, forKey: .title)
         try response.encode(body, forKey: .body)
         try response.encode(location.latitude, forKey: .latitude)
@@ -57,9 +62,9 @@ struct Point: Identifiable, Codable {
 //
 struct TestPoints {
     static let points: [Point] = [firestone, dod]
-    static let firestone = Point(id: UUID().uuidString, title: "Firestone Library", body: "This is Firestone Library. I have spent many moons here.", location: CLLocationCoordinate2D(latitude: 40.34961421019707, longitude: -74.65748434583759))
-    static let dod = Point(id: UUID().uuidString, title: "Dod Hall", body: "Dod Hall, home. At least it was before I fucked everything up.", location: CLLocationCoordinate2D(latitude: 40.346927716711406, longitude: -74.65865037281984))
-    static let lot19 = Point(id: UUID().uuidString, title: "Lot 19", body: "I used to park here since Princeton's student parking is abysmal. Then one day I was finally discovered. I now park at Wawa for $35 a week.", location: CLLocationCoordinate2D(latitude: 40.338747766989734, longitude: -74.66547887223855))
+    static let firestone = Point(id: UUID().uuidString, poster: "John Doe", title: "Firestone Library", body: "This is Firestone Library. I have spent many moons here.", location: CLLocationCoordinate2D(latitude: 40.34961421019707, longitude: -74.65748434583759))
+    static let dod = Point(id: UUID().uuidString, poster: "Brian Kernighan", title: "Dod Hall", body: "Dod Hall, home. At least it was before I fucked everything up.", location: CLLocationCoordinate2D(latitude: 40.346927716711406, longitude: -74.65865037281984))
+    static let lot19 = Point(id: UUID().uuidString, poster: "Jane Doe", title: "Lot 19", body: "I used to park here since Princeton's student parking is abysmal. Then one day I was finally discovered. I now park at Wawa for $35 a week.", location: CLLocationCoordinate2D(latitude: 40.338747766989734, longitude: -74.66547887223855))
     
     // Test JSON decoding
     static let jsonString = """

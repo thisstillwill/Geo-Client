@@ -17,7 +17,7 @@ struct PointAnnotationDetailsView: View {
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
-                Text(String(format: "%.4f, %.4f", point.location.latitude, point.location.longitude))
+                Text(String(format: "%.3f, %.3f", point.location.latitude, point.location.longitude))
                     .font(.headline)
                     .foregroundColor(.secondary)
                 Text(point.title)
@@ -26,6 +26,10 @@ struct PointAnnotationDetailsView: View {
                 Text(point.body)
                     .font(.body)
                     .fontWeight(.regular)
+                Text("Posted by \(point.poster)")
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+                    .padding(.top, 4)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .padding()

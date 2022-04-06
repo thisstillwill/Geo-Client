@@ -52,15 +52,29 @@ final class AddPointViewModel: ObservableObject {
     var alertMessage: String = "An error has occurred."
     var hasSubmitted = false
     
+    let user: User
     let location: CLLocationCoordinate2D
     
-    init(isPresented: Binding<Bool>, location: CLLocationCoordinate2D, settingsManager: SettingsManager, authenticationManager: AuthenticationManager) {
+    init(isPresented: Binding<Bool>, user: User, location: CLLocationCoordinate2D, settingsManager: SettingsManager, authenticationManager: AuthenticationManager) {
         self._isPresented = isPresented
+        self.user = user
         self.location = location
         self.settingsManager = settingsManager
         self.authenticationManager = authenticationManager
         self.maxTitleLength = settingsManager.maxTitleLength
         self.maxDescriptionLength = settingsManager.maxDescriptionLength
+    }
+    
+    private func preparePosterField() -> String {
+        if !user.givenName.isEmpty && !user.familyName.isEmpty {
+            return String("\(user.givenName) \(user.familyName.prefix(1)).")
+        } else if !user.givenName.isEmpty {
+            return user.givenName
+        } else if !user.familyName.isEmpty {
+            return user.familyName
+        } else {
+            return "Anonymous"
+        }
     }
     
     public func isValid() -> Bool {
@@ -80,7 +94,7 @@ final class AddPointViewModel: ObservableObject {
         // Prepare API request
         do {
             guard let refreshToken = authenticationManager.refreshToken else { throw AuthenticationError.missingCredentials }
-            let newPoint = Point(id: "", title: title, body: description, location: location)
+            let newPoint = Point(id: "", poster: preparePosterField(), title: title, body: description, location: location)
             let encodedPoint = try JSONEncoder().encode(newPoint)
             
             var components = URLComponents()
@@ -111,9 +125,10 @@ final class AddPointViewModel: ObservableObject {
                 self.isPresented = false
             }
         } catch AuthenticationError.invalidCredentials, AuthenticationError.missingCredentials {
-            print("Logging out")
             submittingPoint = false
-            authenticationManager.logout()
+            showAlert = true
+            alertTitle = "Authentication error!"
+            alertMessage = "Unable to verify user. Please re-open app and sign in again."
         } catch {
             submittingPoint = false
             showAlert = true

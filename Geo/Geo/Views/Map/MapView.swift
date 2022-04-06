@@ -95,8 +95,8 @@ struct MapView: View {
                 viewModel.startUpdatingLocation()
                 updatingPoints = viewModel.startUpdatingAnnotations()
             }) {
-                if let location = viewModel.getCurrentLocation() {
-                    AddPointView(viewModel: AddPointViewModel(isPresented: $showAddPointView, location: location, settingsManager: settingsManager, authenticationManager: authenticationManager))
+                if let location = viewModel.getCurrentLocation(), let user = viewModel.getCurrentUser() {
+                    AddPointView(viewModel: AddPointViewModel(isPresented: $showAddPointView, user: user, location: location, settingsManager: settingsManager, authenticationManager: authenticationManager))
                 }
             }
         }

@@ -56,6 +56,16 @@ final class MapViewModel: ObservableObject {
         }
     }
     
+    func getCurrentUser() -> User? {
+        guard let user = authenticationManager.currentUser else {
+            showAlert = true
+            alertTitle = "Authentication error!"
+            alertMessage = "Unable to verify user. Please re-open app and sign in again."
+            return nil
+        }
+        return user
+    }
+    
     private func getMapAnnotations() async throws {
         print("Getting annotations!")
         
