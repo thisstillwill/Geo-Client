@@ -13,6 +13,7 @@ import SwiftUI
 final class AddPointViewModel: ObservableObject {
     // Injected dependencies
     @ObservedObject var settingsManager: SettingsManager
+    @ObservedObject var authenticationManager: AuthenticationManager
     
     @Binding var isPresented: Bool
     @Published var maxTitleLength: Int
@@ -53,10 +54,11 @@ final class AddPointViewModel: ObservableObject {
     
     let location: CLLocationCoordinate2D
     
-    init(isPresented: Binding<Bool>,  location: CLLocationCoordinate2D, settingsManager: SettingsManager) {
+    init(isPresented: Binding<Bool>, location: CLLocationCoordinate2D, settingsManager: SettingsManager, authenticationManager: AuthenticationManager) {
         self._isPresented = isPresented
         self.location = location
         self.settingsManager = settingsManager
+        self.authenticationManager = authenticationManager
         self.maxTitleLength = settingsManager.maxTitleLength
         self.maxDescriptionLength = settingsManager.maxDescriptionLength
     }
@@ -77,6 +79,7 @@ final class AddPointViewModel: ObservableObject {
         
         // Prepare API request
         do {
+            guard let refreshToken = authenticationManager.refreshToken else { throw AuthenticationError.missingCredentials }
             let newPoint = Point(id: "", title: title, body: description, location: location)
             let encodedPoint = try JSONEncoder().encode(newPoint)
             
@@ -88,15 +91,29 @@ final class AddPointViewModel: ObservableObject {
             
             var request = URLRequest(url: components.url!)
             request.httpMethod = "POST"
+            request.setValue(refreshToken, forHTTPHeaderField: "Authorization")
             
             let (_, response) = try await URLSession.shared.upload(for: request, from: encodedPoint)
-
-            guard let response = response as? HTTPURLResponse,
-                  (200...299).contains(response.statusCode) else { throw AuthenticationError.badResponse }
+            
+            guard let response = response as? HTTPURLResponse else {
+                throw AuthenticationError.badResponse
+            }
+            
+            guard (200...299).contains(response.statusCode) else {
+                if response.statusCode == 401 {
+                    throw AuthenticationError.invalidCredentials
+                } else {
+                    throw AuthenticationError.badResponse
+                }
+            }
             
             DispatchQueue.main.async {
                 self.isPresented = false
             }
+        } catch AuthenticationError.invalidCredentials, AuthenticationError.missingCredentials {
+            print("Logging out")
+            submittingPoint = false
+            authenticationManager.logout()
         } catch {
             submittingPoint = false
             showAlert = true

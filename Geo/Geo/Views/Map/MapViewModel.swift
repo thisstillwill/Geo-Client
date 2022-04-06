@@ -105,7 +105,7 @@ final class MapViewModel: ObservableObject {
                     try Task.checkCancellation()
                     do {
                         try await getMapAnnotations()
-                    } catch AuthenticationError.invalidCredentials {
+                    } catch AuthenticationError.invalidCredentials, AuthenticationError.missingCredentials {
                         print("Logging out")
                         authenticationManager.logout()
                     } catch {

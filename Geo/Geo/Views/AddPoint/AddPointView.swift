@@ -78,6 +78,6 @@ struct AddPointView: View {
 
 struct AddPointView_Previews: PreviewProvider {
     static var previews: some View {
-        AddPointView(viewModel: AddPointViewModel(isPresented: .constant(true), location: CLLocationCoordinate2D(latitude: 0.000, longitude: 0.000), settingsManager: SettingsManager()))
+        AddPointView(viewModel: AddPointViewModel(isPresented: .constant(true), location: CLLocationCoordinate2D(latitude: 0.000, longitude: 0.000), settingsManager: SettingsManager(), authenticationManager: AuthenticationManager(settingsManager: SettingsManager())))
     }
 }
