@@ -65,6 +65,7 @@ final class AddPointViewModel: ObservableObject {
     }
     
     public func submitForm() async {
+        // Validate form contents and show loading spinner
         guard isValid() else {
             showAlert = true
             alertTitle = "Submission error!"
@@ -73,6 +74,7 @@ final class AddPointViewModel: ObservableObject {
         }
         submittingPoint = true
         
+        // Prepare API request
         do {
             let newPoint = Point(id: "", title: title, body: description, location: location)
             let encodedPoint = try JSONEncoder().encode(newPoint)
