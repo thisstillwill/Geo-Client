@@ -42,6 +42,7 @@ final class AddPointViewModel: ObservableObject {
             }
         }
     }
+    @Published var submittingPoint = false
     
     // Alert info
     var showAlert = false
@@ -70,6 +71,7 @@ final class AddPointViewModel: ObservableObject {
             alertMessage = "One or more form values are missing."
             return
         }
+        submittingPoint = true
         
         do {
             let newPoint = Point(id: "", title: title, body: description, location: location)
@@ -93,6 +95,7 @@ final class AddPointViewModel: ObservableObject {
                 self.isPresented = false
             }
         } catch {
+            submittingPoint = false
             showAlert = true
             alertTitle = "Submission error!"
             alertMessage = "Unable to connect to the server."

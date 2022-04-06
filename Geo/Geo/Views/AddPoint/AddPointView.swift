@@ -19,44 +19,43 @@ struct AddPointView: View {
     
     var body: some View {
         
-//        let _ = Self._printChanges()
-        
-        NavigationView {
-            Form(content: {
-                
-                // Point information fields
-                Section(header: Text("Title")) {
-                    TextEditor(text: $viewModel.title)
-                        .frame(minHeight: 60)
-                    ProgressView("\(viewModel.title.count)/\(viewModel.maxTitleLength)", value: Double(viewModel.title.count), total: Double(viewModel.maxTitleLength))
-                }
-                Section(header: Text("Description")) {
-                    TextEditor(text: $viewModel.description)
-                        .frame(minHeight: 240)
-                    ProgressView("\(viewModel.description.count)/\(viewModel.maxDescriptionLength)", value: Double(viewModel.description.count), total: Double(viewModel.maxDescriptionLength))
-                }
-                
-                // Submit button
-                Section {
-                    Button(action: {
-                        Task {
-                            await viewModel.submitForm()
-                        }
-                    }) {
-                        HStack {
-                            Spacer()
-                            Text("Submit")
-                            Spacer()
-                        }
+        if viewModel.submittingPoint {
+            ProgressView()
+        } else {
+            NavigationView {
+                Form(content: {
+                    // Point information fields
+                    Section(header: Text("Title")) {
+                        TextEditor(text: $viewModel.title)
+                            .frame(minHeight: 60)
+                        ProgressView("\(viewModel.title.count)/\(viewModel.maxTitleLength)", value: Double(viewModel.title.count), total: Double(viewModel.maxTitleLength))
                     }
-                    .disabled(!viewModel.isValid())
-                    .foregroundColor(.white)
-                    .padding(8)
-                    .background(buttonColor)
-                    .cornerRadius(8)
-                    .listRowBackground(buttonColor)
-                }
-            })
+                    Section(header: Text("Description")) {
+                        TextEditor(text: $viewModel.description)
+                            .frame(minHeight: 240)
+                        ProgressView("\(viewModel.description.count)/\(viewModel.maxDescriptionLength)", value: Double(viewModel.description.count), total: Double(viewModel.maxDescriptionLength))
+                    }
+                    // Submit button
+                    Section {
+                        Button(action: {
+                            Task {
+                                await viewModel.submitForm()
+                            }
+                        }) {
+                            HStack {
+                                Spacer()
+                                Text("Submit")
+                                Spacer()
+                            }
+                        }
+                        .disabled(!viewModel.isValid())
+                        .foregroundColor(.white)
+                        .padding(8)
+                        .background(buttonColor)
+                        .cornerRadius(8)
+                        .listRowBackground(buttonColor)
+                    }
+                })
                 .navigationTitle("Add Point")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -73,6 +72,7 @@ struct AddPointView: View {
                         message: Text(viewModel.alertMessage)
                     )
                 }
+            }
         }
     }
 }
