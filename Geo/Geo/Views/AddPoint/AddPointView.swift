@@ -11,17 +11,10 @@ import CoreLocation
 
 struct AddPointView: View {
     
-    @EnvironmentObject var settingsManager: SettingsManager
-    @ObservedObject var viewModel: AddPointViewModel
-    @Binding var isPresented: Bool
+    @StateObject var viewModel: AddPointViewModel
     
     private var buttonColor: Color {
         return viewModel.isValid() ? .accentColor : .gray
-    }
-    
-    init (isPresented: Binding<Bool>, location: CLLocationCoordinate2D, settingsManager: SettingsManager) {
-        self.viewModel = AddPointViewModel(location: location, settingsManager: settingsManager)
-        self._isPresented = isPresented
     }
     
     var body: some View {
@@ -35,28 +28,19 @@ struct AddPointView: View {
                 Section(header: Text("Title")) {
                     TextEditor(text: $viewModel.title)
                         .frame(minHeight: 60)
-                    ProgressView("\(viewModel.title.count)/\(settingsManager.maxTitleLength)", value: Double(viewModel.title.count), total: Double(settingsManager.maxTitleLength))
+                    ProgressView("\(viewModel.title.count)/\(viewModel.maxTitleLength)", value: Double(viewModel.title.count), total: Double(viewModel.maxTitleLength))
                 }
                 Section(header: Text("Description")) {
                     TextEditor(text: $viewModel.description)
                         .frame(minHeight: 240)
-                    ProgressView("\(viewModel.description.count)/\(settingsManager.maxDescriptionLength)", value: Double(viewModel.description.count), total: Double(settingsManager.maxDescriptionLength))
+                    ProgressView("\(viewModel.description.count)/\(viewModel.maxDescriptionLength)", value: Double(viewModel.description.count), total: Double(viewModel.maxDescriptionLength))
                 }
                 
                 // Submit button
                 Section {
                     Button(action: {
                         Task {
-                            do {
-                                try await viewModel.submitForm()
-                                if (viewModel.state.hasSubmitted) {
-                                    isPresented = false
-                                }
-                            } catch {
-                                viewModel.state.showAlert = true
-                                viewModel.state.alertTitle = "Submission error!"
-                                viewModel.state.alertMessage = "Unable to connect to the server."
-                            }
+                            await viewModel.submitForm()
                         }
                     }) {
                         HStack {
@@ -78,15 +62,15 @@ struct AddPointView: View {
                 .toolbar {
                     ToolbarItem(placement: .destructiveAction) {
                         Button("Cancel") {
-                            isPresented = false
+                            viewModel.isPresented = false
                         }
                         .foregroundColor(.red)
                     }
                 }
-                .alert(isPresented: $viewModel.state.showAlert) {
+                .alert(isPresented: $viewModel.showAlert) {
                     Alert(
-                        title: Text(viewModel.state.alertTitle),
-                        message: Text(viewModel.state.alertMessage)
+                        title: Text(viewModel.alertTitle),
+                        message: Text(viewModel.alertMessage)
                     )
                 }
         }
@@ -95,6 +79,6 @@ struct AddPointView: View {
 
 struct AddPointView_Previews: PreviewProvider {
     static var previews: some View {
-        AddPointView(isPresented: .constant(true), location: CLLocationCoordinate2D(latitude: 0.000, longitude: 0.000), settingsManager: SettingsManager()).environmentObject(SettingsManager())
+        AddPointView(viewModel: AddPointViewModel(isPresented: .constant(true), location: CLLocationCoordinate2D(latitude: 0.000, longitude: 0.000), settingsManager: SettingsManager()))
     }
 }

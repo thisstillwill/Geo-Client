@@ -55,6 +55,6 @@ struct LoginView: View {
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView(viewModel: LoginViewModel(authenticationManager: DependencyManager(settingsManager: SettingsManager(), authenticationManager: AuthenticationManager(settingsManager: SettingsManager()), locationManager: LocationManager(settingsManager: SettingsManager())).authenticationManager))
+        LoginView(viewModel: LoginViewModel(authenticationManager: AuthenticationManager(settingsManager: SettingsManager())))
     }
 }
