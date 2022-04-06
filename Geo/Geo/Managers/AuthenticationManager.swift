@@ -29,6 +29,12 @@ final class AuthenticationManager: ObservableObject {
         self.settingsManager = settingsManager
     }
     
+    func logout() {
+        currentUser = nil
+        refreshToken = nil
+        isSignedIn = false
+    }
+    
     // Sign up a new user
     func signUp(appleIDCredential: ASAuthorizationAppleIDCredential, restoringUser: Bool) async throws {
         // Set current user and save information to keychain as appropriate
@@ -108,6 +114,7 @@ final class AuthenticationManager: ObservableObject {
         DispatchQueue.main.async {
             self.isSignedIn = true
             self.currentUser = currentUser
+            self.refreshToken = refreshToken
         }
     }
     

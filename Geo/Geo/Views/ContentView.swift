@@ -17,7 +17,7 @@ struct ContentView: View {
     
     var body: some View {
         if (authenticationManager.isSignedIn) {
-            MapView(viewModel: MapViewModel(settingsManager: settingsManager, locationManager: locationManager))
+            MapView(viewModel: MapViewModel(settingsManager: settingsManager, locationManager: locationManager, authenticationManager: authenticationManager))
         } else {
             LoginView(viewModel: LoginViewModel(authenticationManager: authenticationManager))
         }

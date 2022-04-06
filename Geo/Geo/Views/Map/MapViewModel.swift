@@ -14,6 +14,7 @@ final class MapViewModel: ObservableObject {
     // Injected dependencies
     @ObservedObject var settingsManager: SettingsManager
     @ObservedObject var locationManager: LocationManager
+    @ObservedObject var authenticationManager: AuthenticationManager
     
     // Map settings
     @Published var coordinateRegion: MKCoordinateRegion
@@ -27,9 +28,10 @@ final class MapViewModel: ObservableObject {
     @Published var alertTitle: String = "Error!"
     @Published var alertMessage: String = "An error has occurred."
     
-    init(settingsManager: SettingsManager, locationManager: LocationManager) {
+    init(settingsManager: SettingsManager, locationManager: LocationManager, authenticationManager: AuthenticationManager) {
         self.settingsManager = settingsManager
         self.locationManager = locationManager
+        self.authenticationManager = authenticationManager
         self.coordinateRegion = locationManager.region
     }
     
@@ -58,6 +60,7 @@ final class MapViewModel: ObservableObject {
         print("Getting annotations!")
         
         let currentLocation = try locationManager.getCurrentLocation()
+        guard let refreshToken = authenticationManager.refreshToken else { throw AuthenticationError.missingCredentials }
         
         var components = URLComponents()
         components.scheme = settingsManager.scheme
@@ -69,8 +72,24 @@ final class MapViewModel: ObservableObject {
             URLQueryItem(name: "longitude", value: String(currentLocation.longitude)),
             URLQueryItem(name: "radius", value: String(settingsManager.searchRadiusMeters))
         ]
+        var request = URLRequest(url: components.url!)
+        request.httpMethod = "GET"
+        request.setValue(refreshToken, forHTTPHeaderField: "Authorization")
         
-        let (data, _) = try await URLSession.shared.data(from: components.url!)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let response = response as? HTTPURLResponse else {
+            throw AuthenticationError.badResponse
+        }
+        
+        guard (200...299).contains(response.statusCode) else {
+            if response.statusCode == 401 {
+                throw AuthenticationError.invalidCredentials
+            } else {
+                throw AuthenticationError.badResponse
+            }
+        }
+        
         let points = try JSONDecoder().decode([Point].self, from: data)
         
         DispatchQueue.main.async {
@@ -86,6 +105,9 @@ final class MapViewModel: ObservableObject {
                     try Task.checkCancellation()
                     do {
                         try await getMapAnnotations()
+                    } catch AuthenticationError.invalidCredentials {
+                        print("Logging out")
+                        authenticationManager.logout()
                     } catch {
                         showAlert = true
                         alertTitle = "Server error!"

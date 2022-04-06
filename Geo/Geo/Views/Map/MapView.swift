@@ -13,6 +13,7 @@ struct MapView: View {
     
     @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var locationManager: LocationManager
+    @EnvironmentObject var authenticationManager: AuthenticationManager
     @StateObject var viewModel: MapViewModel
     
     // View state
@@ -104,8 +105,6 @@ struct MapView: View {
 
 struct MapView_Previews: PreviewProvider {
     static var previews: some View {
-        MapView(viewModel: MapViewModel(settingsManager: SettingsManager(), locationManager: LocationManager(settingsManager: SettingsManager())))
-            .environmentObject(SettingsManager())
-            .environmentObject(LocationManager(settingsManager: SettingsManager()))
+        MapView(viewModel: MapViewModel(settingsManager: SettingsManager(), locationManager: LocationManager(settingsManager: SettingsManager()), authenticationManager: AuthenticationManager(settingsManager: SettingsManager())))
     }
 }
