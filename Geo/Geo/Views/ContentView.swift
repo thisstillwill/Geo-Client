@@ -11,13 +11,11 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var authenticationManager: AuthenticationManager
-    @EnvironmentObject var locationManager: LocationManager
     
     var body: some View {
         if (authenticationManager.isSignedIn) {
-            MapView(viewModel: MapViewModel(settingsManager: settingsManager, locationManager: locationManager, authenticationManager: authenticationManager))
+            MainView()
         } else {
             LoginView(viewModel: LoginViewModel(authenticationManager: authenticationManager))
         }

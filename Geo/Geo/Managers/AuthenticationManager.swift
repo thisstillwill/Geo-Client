@@ -33,6 +33,7 @@ final class AuthenticationManager: ObservableObject {
     func logout() {
         currentUser = nil
         refreshToken = nil
+        keychainHelper.delete(service: "refresh-token", account: "geo")
         isSignedIn = false
         checkingSession = false
     }
@@ -73,6 +74,7 @@ final class AuthenticationManager: ObservableObject {
         guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
             throw AuthenticationError.invalidCredentials
         }
+        keychainHelper.save(refreshToken.token, service: "refresh-token", account: "geo")
         
         self.currentUser = user
         DispatchQueue.main.async {
@@ -153,6 +155,7 @@ final class AuthenticationManager: ObservableObject {
             }
         }
         let signInResponse = try JSONDecoder().decode(SignInResponse.self, from: data)
+        keychainHelper.save(signInResponse.token.token, service: "refresh-token", account: "geo")
         
         DispatchQueue.main.async {
             self.isSignedIn = true

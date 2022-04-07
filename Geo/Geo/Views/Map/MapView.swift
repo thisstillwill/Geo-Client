@@ -37,7 +37,7 @@ struct MapView: View {
                         PointAnnotationView(viewModel: PointAnnotationViewModel(settingsManager: settingsManager, locationManager: locationManager), point: point)
                     }
                 }
-                .ignoresSafeArea()
+                .ignoresSafeArea(.all, edges: .top)
                 .onAppear {
                     viewModel.startUpdatingLocation()
                     updatingPoints = viewModel.startUpdatingAnnotations()
