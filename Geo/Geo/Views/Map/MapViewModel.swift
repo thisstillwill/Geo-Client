@@ -100,7 +100,9 @@ final class MapViewModel: ObservableObject {
             }
         }
         
-        let points = try JSONDecoder().decode([Point].self, from: data)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let points = try decoder.decode([Point].self, from: data)
         
         DispatchQueue.main.async {
             self.pointAnnotations = points
@@ -121,7 +123,7 @@ final class MapViewModel: ObservableObject {
                     } catch {
                         showAlert = true
                         alertTitle = "Server error!"
-                        alertMessage = "Unable to refresh points from server."
+                        alertMessage = "Unable to refresh points from the server."
                     }
                     try await Task.sleep(nanoseconds: settingsManager.mapRefreshDelay)
                 }

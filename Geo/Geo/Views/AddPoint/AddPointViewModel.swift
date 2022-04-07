@@ -94,8 +94,10 @@ final class AddPointViewModel: ObservableObject {
         // Prepare API request
         do {
             guard let refreshToken = authenticationManager.refreshToken else { throw AuthenticationError.missingCredentials }
-            let newPoint = Point(id: "", poster: preparePosterField(), title: title, body: description, location: location)
-            let encodedPoint = try JSONEncoder().encode(newPoint)
+            let newPoint = Point(id: "", poster: preparePosterField(), posted: Date.now, title: title, body: description, location: location)
+            let encoder = JSONEncoder()
+            encoder.dateEncodingStrategy = .iso8601
+            let encodedPoint = try encoder.encode(newPoint)
             
             var components = URLComponents()
             components.scheme = settingsManager.scheme
