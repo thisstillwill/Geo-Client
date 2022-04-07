@@ -12,10 +12,11 @@ import SwiftUI
 
 final class LoginViewModel: ObservableObject {
     @ObservedObject var authenticationManager: AuthenticationManager
-    @Published var checkingSession = true
+    @Published var checkingSession: Bool
     
     init(authenticationManager: AuthenticationManager) {
         self.authenticationManager = authenticationManager
+        self.checkingSession = authenticationManager.checkingSession
     }
     
     // Check if a user already has a previous sign-in user
@@ -27,7 +28,7 @@ final class LoginViewModel: ObservableObject {
             // Automatic sign-in failed, reverting to manual authentication
             print("Failed to automatically sign in!")
             print(error)
-            checkingSession = false
+            authenticationManager.checkingSession = false
         }
     }
     

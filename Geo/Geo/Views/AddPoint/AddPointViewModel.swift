@@ -128,9 +128,7 @@ final class AddPointViewModel: ObservableObject {
             }
         } catch AuthenticationError.invalidCredentials, AuthenticationError.missingCredentials {
             submittingPoint = false
-            showAlert = true
-            alertTitle = "Authentication error!"
-            alertMessage = "Unable to verify user. Please re-open app and sign in again."
+            authenticationManager.logout()
         } catch {
             submittingPoint = false
             showAlert = true

@@ -22,6 +22,7 @@ final class AuthenticationManager: ObservableObject {
     @Published var currentUser: User?
     @Published var refreshToken: String?
     @Published var isSignedIn = false
+    @Published var checkingSession = true
     
     private final let keychainHelper = KeychainHelper()
     
@@ -33,6 +34,7 @@ final class AuthenticationManager: ObservableObject {
         currentUser = nil
         refreshToken = nil
         isSignedIn = false
+        checkingSession = false
     }
     
     // Sign up a new user
