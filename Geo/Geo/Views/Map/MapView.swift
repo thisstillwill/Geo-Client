@@ -49,6 +49,22 @@ struct MapView: View {
                 
                 // Button stack
                 VStack(spacing: 10) {
+                   
+                    // Reset region button
+                    Button(action: {
+                        withAnimation {
+                            viewModel.resetRegion()
+                        }
+                    }) {
+                        Image(systemName: "location.fill")
+                    }.buttonStyle(
+                        CircleButton(
+                            foregroundColor: .blue,
+                            backgroundColor: .white,
+                            radius: 65,
+                            fontSize: 30,
+                            fontWeight: .regular
+                        ))
                     
                     // Refresh map button
                     Button(action: {

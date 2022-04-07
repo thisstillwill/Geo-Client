@@ -45,6 +45,11 @@ final class MapViewModel: ObservableObject {
         locationManager.stopUpdatingLocation()
     }
     
+    func resetRegion() {
+        guard let currentLocation = getCurrentLocation() else { return }
+        coordinateRegion = MKCoordinateRegion(center: currentLocation, span: MapDetails.defaultSpan)
+    }
+    
     func getCurrentLocation() -> CLLocationCoordinate2D? {
         do {
             return try locationManager.getCurrentLocation()
