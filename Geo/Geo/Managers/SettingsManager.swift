@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 import MapKit
 
+// Manage global settings and other important default values
 final class SettingsManager: ObservableObject {
     @Published var scheme: String = "http"
     @Published var host: String = "Williams-MacBook-Pro.local"

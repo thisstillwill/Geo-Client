@@ -9,6 +9,7 @@
 import SwiftUI
 import MapKit
 
+// Custom errors
 enum LocationError: Error {
     case locationMissing
 }
@@ -19,9 +20,12 @@ enum MapDetails {
     static let defaultSpan = MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
 }
 
+// Manage access to location services
 final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
-    
+    // Injected dependencies
     @ObservedObject var settingsManager: SettingsManager
+    
+    // Published properties
     @Published var currentLocation: CLLocationCoordinate2D?
     @Published var region = MKCoordinateRegion(
         center: MapDetails.defaultLocation,
@@ -32,6 +36,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     @Published var alertTitle: String = "Error!"
     @Published var alertMessage: String = "An error has occurred."
     
+    // Maintain private instance of CLLocationManager to act as delegate for
     private let locationManager = CLLocationManager()
     
     init(settingsManager: SettingsManager) {
@@ -61,6 +66,13 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         checkLocationAuthorized()
     }
     
+    internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            self.currentLocation = location.coordinate
+            self.region = MKCoordinateRegion(center: location.coordinate, span: self.region.span)
+        }
+    }
+    
     func getCurrentLocation() throws -> CLLocationCoordinate2D {
         guard let currentLocation = currentLocation else { throw LocationError.locationMissing }
         return currentLocation
@@ -68,7 +80,6 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     
     func startUpdatingLocation() {
         if CLLocationManager.locationServicesEnabled() {
-            print("Started updating location!")
             self.locationManager.startUpdatingLocation()
         } else {
             print("Location services is required to use this app.")
@@ -76,15 +87,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
     
     func stopUpdatingLocation() {
-        print("Stopped updating location!")
         self.locationManager.stopUpdatingLocation()
-    }
-    
-    internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.last {
-            self.currentLocation = location.coordinate
-            self.region = MKCoordinateRegion(center: location.coordinate, span: self.region.span)
-        }
     }
 }
 

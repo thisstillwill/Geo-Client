@@ -35,16 +35,17 @@ final class MapViewModel: ObservableObject {
         self.coordinateRegion = locationManager.region
     }
     
-    // Start updating location and points
+    // Start updating location
     func startUpdatingLocation() {
         locationManager.startUpdatingLocation()
     }
     
-    // Stop updating location and points
+    // Stop updating location
     func stopUpdatingLocation() {
         locationManager.stopUpdatingLocation()
     }
     
+    // Reset the visible area of the map by recentering on the current location with the default span
     func resetRegion() {
         guard let currentLocation = getCurrentLocation() else { return }
         coordinateRegion = MKCoordinateRegion(center: currentLocation, span: MapDetails.defaultSpan)
@@ -71,12 +72,11 @@ final class MapViewModel: ObservableObject {
         return user
     }
     
+    // Get a list of points within the available search radius from the server
     private func getMapAnnotations() async throws {
-        print("Getting annotations!")
-        
+        // Prepare API request
         let currentLocation = try locationManager.getCurrentLocation()
         guard let refreshToken = authenticationManager.refreshToken else { throw AuthenticationError.missingCredentials }
-        
         var components = URLComponents()
         components.scheme = settingsManager.scheme
         components.host = settingsManager.host
@@ -91,12 +91,11 @@ final class MapViewModel: ObservableObject {
         request.httpMethod = "GET"
         request.setValue(refreshToken, forHTTPHeaderField: "Authorization")
         
+        // Submit request to server and validate response
         let (data, response) = try await URLSession.shared.data(for: request)
-        
         guard let response = response as? HTTPURLResponse else {
             throw AuthenticationError.badResponse
         }
-        
         guard (200...299).contains(response.statusCode) else {
             if response.statusCode == 401 {
                 throw AuthenticationError.invalidCredentials
@@ -104,17 +103,18 @@ final class MapViewModel: ObservableObject {
                 throw AuthenticationError.badResponse
             }
         }
-        
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         let points = try decoder.decode([Point].self, from: data)
         
+        // Set list of points
         DispatchQueue.main.async {
             self.pointAnnotations = points
         }
     }
     
-    public func startUpdatingAnnotations() -> Task<Void, Never> {
+    // Continuously update the list of points from the server
+    func startUpdatingAnnotations() -> Task<Void, Never> {
         let task = Task {
             do {
                 while true {
@@ -123,7 +123,6 @@ final class MapViewModel: ObservableObject {
                     do {
                         try await getMapAnnotations()
                     } catch AuthenticationError.invalidCredentials, AuthenticationError.missingCredentials {
-                        print("Logging out")
                         authenticationManager.logout()
                     } catch {
                         showAlert = true
@@ -132,15 +131,13 @@ final class MapViewModel: ObservableObject {
                     }
                     try await Task.sleep(nanoseconds: settingsManager.mapRefreshDelay)
                 }
-            } catch {
-                print("Updating annotations canceled!")
-            }
+            } catch {}
         }
         return task
     }
     
-    public func canAddPoint() -> Bool {
-        
+    // Check if the user is far enough away from existing points to submit a new point of their own
+    func canAddPoint() -> Bool {
         do {
             let currentLocation = try locationManager.getCurrentLocation()
             if pointAnnotations.allSatisfy( { $0.location.distance(from: currentLocation) > settingsManager.adjacentPointRestriction  }) {

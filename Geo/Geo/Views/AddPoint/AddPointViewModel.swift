@@ -15,6 +15,7 @@ final class AddPointViewModel: ObservableObject {
     @ObservedObject var settingsManager: SettingsManager
     @ObservedObject var authenticationManager: AuthenticationManager
     
+    // Published properties
     @Binding var isPresented: Bool
     @Published var maxTitleLength: Int
     @Published var maxDescriptionLength: Int
@@ -77,11 +78,11 @@ final class AddPointViewModel: ObservableObject {
         }
     }
     
-    public func isValid() -> Bool {
+    func isValid() -> Bool {
         return !title.isEmpty && !description.isEmpty
     }
     
-    public func submitForm() async {
+    func submitForm() async {
         // Validate form contents and show loading spinner
         guard isValid() else {
             showAlert = true
@@ -98,23 +99,20 @@ final class AddPointViewModel: ObservableObject {
             let encoder = JSONEncoder()
             encoder.dateEncodingStrategy = .iso8601
             let encodedPoint = try encoder.encode(newPoint)
-            
             var components = URLComponents()
             components.scheme = settingsManager.scheme
             components.host = settingsManager.host
             components.port = settingsManager.port
             components.path = "/points"
-            
             var request = URLRequest(url: components.url!)
             request.httpMethod = "POST"
             request.setValue(refreshToken, forHTTPHeaderField: "Authorization")
             
+            // Submit request to server and validate response
             let (_, response) = try await URLSession.shared.upload(for: request, from: encodedPoint)
-            
             guard let response = response as? HTTPURLResponse else {
                 throw AuthenticationError.badResponse
             }
-            
             guard (200...299).contains(response.statusCode) else {
                 if response.statusCode == 401 {
                     throw AuthenticationError.invalidCredentials
@@ -123,6 +121,7 @@ final class AddPointViewModel: ObservableObject {
                 }
             }
             
+            // Set published properties
             DispatchQueue.main.async {
                 self.isPresented = false
             }

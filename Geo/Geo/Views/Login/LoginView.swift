@@ -10,10 +10,10 @@ import SwiftUI
 import AuthenticationServices
 
 struct LoginView: View {
-    
-    // TODO: Refactor to adapt colorscheme on change?
+    // Required to adapt Sign in with Apple button to current colorscheme
     @Environment(\.colorScheme) var colorScheme
-    @ObservedObject var viewModel: LoginViewModel
+    
+    @StateObject var viewModel: LoginViewModel
     
     var body: some View {
         if viewModel.checkingSession {

@@ -14,6 +14,7 @@ struct MapView: View {
     @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var authenticationManager: AuthenticationManager
+    
     @StateObject var viewModel: MapViewModel
     
     // View state
@@ -21,10 +22,8 @@ struct MapView: View {
     @State var updatingPoints: Task<Void, Never>?
     
     var body: some View {
-        
         NavigationView {
             ZStack(alignment: .bottomTrailing) {
-                
                 // Main map screen
                 Map(
                     coordinateRegion: $viewModel.coordinateRegion,
@@ -49,7 +48,6 @@ struct MapView: View {
                 
                 // Button stack
                 VStack(spacing: 10) {
-                   
                     // Reset region button
                     Button(action: {
                         withAnimation {

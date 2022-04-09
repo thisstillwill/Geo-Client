@@ -10,26 +10,32 @@ import Foundation
 import AuthenticationServices
 import SwiftUI
 
+// Custom errors
 enum AuthenticationError: Error {
     case missingCredentials
     case invalidCredentials
     case badResponse
 }
 
+// Manage authentication and the current user's information
 final class AuthenticationManager: ObservableObject {
-    
+    // Injected dependencies
     @ObservedObject var settingsManager: SettingsManager
+    
+    // Published properties
     @Published var currentUser: User?
     @Published var refreshToken: String?
     @Published var isSignedIn = false
     @Published var checkingSession = true
     
+    // Maintain private instance of a KeyChainHelper to securely save authentication details
     private final let keychainHelper = KeychainHelper()
     
     init(settingsManager: SettingsManager) {
         self.settingsManager = settingsManager
     }
     
+    // Logout the user by removing access to the received refresh token and resetting published values
     func logout() {
         currentUser = nil
         refreshToken = nil
@@ -74,8 +80,9 @@ final class AuthenticationManager: ObservableObject {
         guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
             throw AuthenticationError.invalidCredentials
         }
-        keychainHelper.save(refreshToken.token, service: "refresh-token", account: "geo")
         
+        // Save refresh token to keychain and set published properties
+        keychainHelper.save(refreshToken.token, service: "refresh-token", account: "geo")
         self.currentUser = user
         DispatchQueue.main.async {
             self.isSignedIn = true
@@ -85,7 +92,6 @@ final class AuthenticationManager: ObservableObject {
     
     // Attempt to restore an existing authentication session
     func signIn() async throws {
-        print("Attempting to automatically sign in")
         // Retrieve credentials from keychain
         guard let refreshToken = keychainHelper.read(service: "refresh-token", account: "geo", type: String.self) else {
             throw AuthenticationError.missingCredentials
@@ -113,8 +119,8 @@ final class AuthenticationManager: ObservableObject {
             throw AuthenticationError.invalidCredentials
         }
         let currentUser = try JSONDecoder().decode(User.self, from: data)
-        print("Got here!")
         
+        // Set published properties
         DispatchQueue.main.async {
             self.isSignedIn = true
             self.currentUser = currentUser
@@ -146,7 +152,7 @@ final class AuthenticationManager: ObservableObject {
             throw AuthenticationError.badResponse
         }
         guard (200...299).contains(response.statusCode) else {
-            // If user not found, retry the sign-up process
+            // If user not found, retry the sign-up process using cached user details
             if response.statusCode == 404 {
                 try await signUp(appleIDCredential: appleIDCredential, restoringUser: true)
                 return
@@ -155,8 +161,9 @@ final class AuthenticationManager: ObservableObject {
             }
         }
         let signInResponse = try JSONDecoder().decode(SignInResponse.self, from: data)
-        keychainHelper.save(signInResponse.token.token, service: "refresh-token", account: "geo")
         
+        // Save refresh token to keychain and set published properties
+        keychainHelper.save(signInResponse.token.token, service: "refresh-token", account: "geo")
         DispatchQueue.main.async {
             self.isSignedIn = true
             self.refreshToken = signInResponse.token.token
@@ -165,6 +172,8 @@ final class AuthenticationManager: ObservableObject {
     }
 }
 
+// Securely save, read, or delete from keychain
+// Adapted from https://www.advancedswift.com/secure-private-data-keychain-swift/
 private final class KeychainHelper {
     
     func save(_ data: Data, service: String, account: String) {

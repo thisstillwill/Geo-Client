@@ -14,6 +14,7 @@ struct PointAnnotationDetailsView: View {
     
     let point: Point
     
+    // Compute the appropriate string for elapsed time since point submission
     var dateIntervalString: String {
         let timeDifference = Calendar.current.dateComponents([.second], from: point.posted, to: Date.now).second ?? 0
         switch timeDifference {

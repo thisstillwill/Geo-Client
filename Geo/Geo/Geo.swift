@@ -21,6 +21,7 @@ struct Geo: App {
         self.locationManager = LocationManager(settingsManager: settingsManager)
     }
     
+    // Inject required services after initializing the app
     var body: some Scene {
         WindowGroup {
             ContentView()

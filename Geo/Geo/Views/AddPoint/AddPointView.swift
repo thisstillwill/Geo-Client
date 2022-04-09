@@ -31,6 +31,7 @@ struct AddPointView: View {
                         .frame(minHeight: 240)
                     ProgressView("\(viewModel.description.count)/\(viewModel.maxDescriptionLength)", value: Double(viewModel.description.count), total: Double(viewModel.maxDescriptionLength))
                 }
+                
                 // Submit button
                 Section {
                     Button(action: {

@@ -11,7 +11,7 @@ import CoreLocation
 
 // A Point represents a single unique point of interest on the map
 struct Point: Identifiable, Codable {
-    let id: String? // TODO: Server generates a UUID?
+    let id: String? // Server handles ID generation
     let poster: String
     let posted: Date
     let title: String
@@ -70,17 +70,4 @@ struct TestPoints {
     static let firestone = Point(id: UUID().uuidString, poster: "John Doe", posted: Calendar.current.date(byAdding: .hour, value: -1, to: Date())!, title: "Firestone Library", body: "This is Firestone Library. I have spent many moons here.", location: CLLocationCoordinate2D(latitude: 40.34961421019707, longitude: -74.65748434583759))
     static let dod = Point(id: UUID().uuidString, poster: "Brian Kernighan", posted: Calendar.current.date(byAdding: .day, value: -1, to: Date())!, title: "Dod Hall", body: "Dod Hall, home. At least it was before I fucked everything up.", location: CLLocationCoordinate2D(latitude: 40.346927716711406, longitude: -74.65865037281984))
     static let lot19 = Point(id: UUID().uuidString, poster: "Jane Doe", posted: Calendar.current.date(byAdding: .hour, value: -1, to: Date())!, title: "Lot 19", body: "I used to park here since Princeton's student parking is abysmal. Then one day I was finally discovered. I now park at Wawa for $35 a week.", location: CLLocationCoordinate2D(latitude: 40.338747766989734, longitude: -74.66547887223855))
-    
-    // Test JSON decoding
-    static let jsonString = """
-    {
-        "id": "12345678",
-        "title": "Null Island",
-        "body": "This is not a real place.",
-        "latitude": 0.0,
-        "longitude": 0.0,
-    }
-    """
-    static let data = jsonString.data(using: .utf8)!
-    static let nowhere = try! JSONDecoder().decode(Point.self, from: data)
 }

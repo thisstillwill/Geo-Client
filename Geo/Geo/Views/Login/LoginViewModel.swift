@@ -11,7 +11,10 @@ import AuthenticationServices
 import SwiftUI
 
 final class LoginViewModel: ObservableObject {
+    // Injected dependencies
     @ObservedObject var authenticationManager: AuthenticationManager
+    
+    // Published properties
     @Published var checkingSession: Bool
     
     init(authenticationManager: AuthenticationManager) {
@@ -22,18 +25,15 @@ final class LoginViewModel: ObservableObject {
     // Check if a user already has a previous sign-in user
     func checkSession() async {
         do {
-            print("checking session")
             try await authenticationManager.signIn()
         } catch {
             // Automatic sign-in failed, reverting to manual authentication
-            print("Failed to automatically sign in!")
-            print(error)
-            authenticationManager.checkingSession = false
+            checkingSession = false
         }
     }
     
     // Make the appropriate authentication request from the given credential
-    public func handleCredential(appleIDCredential: ASAuthorizationAppleIDCredential) {
+    func handleCredential(appleIDCredential: ASAuthorizationAppleIDCredential) {
         // New user
         if let _ = appleIDCredential.email, let _ = appleIDCredential.fullName {
             Task {

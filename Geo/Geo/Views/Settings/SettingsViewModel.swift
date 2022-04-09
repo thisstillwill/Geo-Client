@@ -10,7 +10,10 @@ import Foundation
 import SwiftUI
 
 final class SettingsViewModel: ObservableObject {
+    // Injected dependencies
     @ObservedObject var authenticationManager: AuthenticationManager
+    
+    // Published properties
     @Published var user: User?
     
     init(authenticationManager: AuthenticationManager) {

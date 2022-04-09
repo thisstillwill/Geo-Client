@@ -12,6 +12,7 @@ struct SettingsView: View {
     
     @StateObject var viewModel: SettingsViewModel
     
+    // Compute the appropriate string to represent the user's available name infpmration
     var username: String {
         guard let user = viewModel.user else {
             return "Unknown"

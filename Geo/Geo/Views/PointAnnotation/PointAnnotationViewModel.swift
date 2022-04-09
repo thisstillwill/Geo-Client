@@ -15,6 +15,7 @@ final class PointAnnotationViewModel: ObservableObject {
     @ObservedObject var settingsManager: SettingsManager
     @ObservedObject var locationManager: LocationManager
     
+    // Published properties
     @Published var inRangeColor: Color
     @Published var notInRangeColor: Color
     @Published var showPointDetailsView = false
@@ -26,6 +27,7 @@ final class PointAnnotationViewModel: ObservableObject {
         self.notInRangeColor = settingsManager.notInRangeColor
     }
     
+    // Check if the user is close enough to a point to see its message
     func canInteract(otherLocation: CLLocationCoordinate2D) -> Bool {
         do {
             let currentLocation = try locationManager.getCurrentLocation()
