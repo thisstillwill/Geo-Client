@@ -17,6 +17,11 @@ final class LoginViewModel: ObservableObject {
     // Published properties
     @Published var checkingSession: Bool
     
+    // Alert info
+    @Published var showAlert = false
+    @Published var alertTitle: String = "Error!"
+    @Published var alertMessage: String = "An error has occurred."
+    
     init(authenticationManager: AuthenticationManager) {
         self.authenticationManager = authenticationManager
         self.checkingSession = authenticationManager.checkingSession
@@ -40,7 +45,9 @@ final class LoginViewModel: ObservableObject {
                 do {
                     try await authenticationManager.signUp(appleIDCredential: appleIDCredential, restoringUser: false)
                 } catch {
-                    print(error)
+                    showAlert = true
+                    alertTitle = "Authentication error!"
+                    alertMessage = "Failed to sign up, please try again."
                 }
             }
         } else {
@@ -49,7 +56,9 @@ final class LoginViewModel: ObservableObject {
                 do {
                     try await authenticationManager.signIn(appleIDCredential: appleIDCredential)
                 } catch {
-                    print(error)
+                    showAlert = true
+                    alertTitle = "Authentication error!"
+                    alertMessage = "Failed to sign in, please try again."
                 }
             }
         }

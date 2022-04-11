@@ -49,6 +49,12 @@ struct LoginView: View {
                 }
                 .navigationTitle("Sign In")
             }
+            .alert(isPresented: $viewModel.showAlert) {
+                Alert(
+                    title: Text(viewModel.alertTitle),
+                    message: Text(viewModel.alertMessage)
+                )
+            }
         }
     }
 }
