@@ -12,8 +12,11 @@ import MapKit
 
 // Manage global settings and other important default values
 final class SettingsManager: ObservableObject {
+//    @Published var scheme: String = "http"
+//    @Published var host: String = "Williams-MacBook-Pro.local"
+//    @Published var port: Int = 6379
     @Published var scheme: String = "http"
-    @Published var host: String = "Williams-MacBook-Pro.local"
+    @Published var host: String = "167.172.134.3"
     @Published var port: Int = 6379
     @Published var mapRefreshDelay: UInt64 = 5_000_000_000
     @Published var searchRadiusMeters: CLLocationDistance = 1600
